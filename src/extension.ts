@@ -26,6 +26,17 @@ export function activate(context: vscode.ExtensionContext): void {
   // 5. Registrar comandos
   registerCommands(context);
 
+  // 6. Confirmación visual de activación
+  const cfg = config.getConfig();
+  const lang = cfg.language;
+  if (cfg.enabled) {
+    vscode.window.showInformationMessage(
+      lang === 'es'
+        ? '⌨️ KeyMaster activado — haz clic en el editor para probar'
+        : '⌨️ KeyMaster enabled — click in the editor to test',
+    );
+  }
+
   logger.info('KeyMaster activado correctamente');
 }
 

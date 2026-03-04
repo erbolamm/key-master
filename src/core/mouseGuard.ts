@@ -18,39 +18,7 @@ const NOTIFICATION_COOLDOWN_MS = 2000;
  * Escucha cambios de selección en el editor y filtra los originados por ratón.
  */
 export function activate(context: vscode.ExtensionContext): void {
-  // Arrancar si la extensión está habilitada
-  const config = getConfig();
-  if (config.enabled) {
-    startListening(context);
-  }
-
-  // Reaccionar a cambios de configuración
-  configListener = onConfigChanged((newConfig) => {
-    if (newConfig.enabled) {
-      startListening(context);
-    } else {
-      stopListening();
-    }
-  });
-  context.subscriptions.push(configListener);
-
-  logger.info('MouseGuard activado');
-}
-
-/** Desactiva el módulo y limpia listeners */
-export function deactivate(): void {
-  stopListening();
-  configListener?.dispose();
-  configListener = undefined;
-  logger.info('MouseGuard desactivado');
-}
-
-/** Registra el listener de selección si no existe ya */
-function startListening(context: vscode.ExtensionContext): void {
-  if (selectionListener) {
-    return; // Ya está escuchando
-  }
-
+  // Registrar el listener de selección SIEMPRE (internamente comprueba enabled)
   selectionListener = vscode.window.onDidChangeTextEditorSelection((event) => {
     try {
       handleSelectionChange(event);
@@ -60,14 +28,22 @@ function startListening(context: vscode.ExtensionContext): void {
   });
   context.subscriptions.push(selectionListener);
 
-  logger.debug('MouseGuard: listener de selección registrado');
+  // Reaccionar a cambios de configuración (solo para logging)
+  configListener = onConfigChanged((newConfig) => {
+    logger.info(`MouseGuard: enabled=${newConfig.enabled}, mode=${newConfig.mode}`);
+  });
+  context.subscriptions.push(configListener);
+
+  logger.info('MouseGuard activado — listener de selección registrado');
 }
 
-/** Elimina el listener de selección */
-function stopListening(): void {
+/** Desactiva el módulo y limpia listeners */
+export function deactivate(): void {
   selectionListener?.dispose();
   selectionListener = undefined;
-  logger.debug('MouseGuard: listener de selección eliminado');
+  configListener?.dispose();
+  configListener = undefined;
+  logger.info('MouseGuard desactivado');
 }
 
 /**
@@ -94,7 +70,7 @@ function handleSelectionChange(
   }
   lastNotificationTime = now;
 
-  logger.debug('MouseGuard: clic de ratón detectado en el editor');
+  logger.info('MouseGuard: clic de ratón detectado en el editor');
 
   // Para la Fase 1 mostramos atajos de navegación sugeridos
   // En la Fase 2, el CommandInterceptor dará atajos más específicos
