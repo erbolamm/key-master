@@ -1,0 +1,16 @@
+.vscode-test/
+node_modules/
+out/
+src/
+test/
+!dist/extension.js
+.gitignore
+.vscode/
+tsconfig.json
+tsconfig.test.json
+esbuild.js
+icon.svg
+**/*.map
+**/*.ts
+KeyMaster_Guia_Tecnica.txt
+KeyMaster_Guia_Tecnica.docx

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo redondeado -->
+  <rect width="128" height="128" rx="20" ry="20" fill="url(#bg)"/>
+  <!-- Tecla principal -->
+  <rect x="30" y="35" width="68" height="50" rx="8" ry="8" fill="white" opacity="0.95"/>
+  <rect x="34" y="39" width="60" height="42" rx="5" ry="5" fill="none" stroke="#667eea" stroke-width="2"/>
+  <!-- Letra K -->
+  <text x="64" y="70" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="bold" fill="#667eea" text-anchor="middle">K</text>
+  <!-- Corona / estrella (maestro) -->
+  <polygon points="44,30 49,22 54,28 59,18 64,28 69,18 74,28 79,22 84,30" fill="#F1C40F" stroke="#E67E22" stroke-width="1"/>
+  <!-- Indicador de teclado abajo -->
+  <rect x="38" y="92" width="12" height="8" rx="2" fill="white" opacity="0.7"/>
+  <rect x="53" y="92" width="22" height="8" rx="2" fill="white" opacity="0.7"/>
+  <rect x="78" y="92" width="12" height="8" rx="2" fill="white" opacity="0.7"/>
+</svg>

@@ -1,0 +1,344 @@
+⌨️  KeyMaster
+Extensión para Visual Studio Code
+Guía Técnica de Viabilidad y Hoja de Ruta
+ApliArte  ·  Javier Mateo  ·  2026
+Extensión previa creada
+Corrector — Copilot Chat (español)
+Nueva extensión a proyectar
+KeyMaster — Entrenador de teclado sin ratón
+
+
+
+1. Concepto y Objetivo de la Extensión
+La idea parte de una necesidad real: aprender a usar VS Code exclusivamente con el teclado, eliminando la dependencia del ratón. La extensión actuaría como un entrenador inteligente que, cuando el usuario intenta realizar una acción con el ratón, le informa del atajo de teclado equivalente y le obliga a utilizarlo.
+
+Filosofía de la extensión
+	•	No castigar al usuario, sino educarle mostrando la alternativa correcta.
+	•	Activación/desactivación sencilla desde la barra de estado.
+	•	Modo progresivo: primero informar, después bloquear, finalmente entrenar.
+	•	Incluir un panel de entrenamiento de mecanografía con guía visual de dedos.
+
+💡 Nombre sugerido: KeyMaster
+"Domina el teclado. Olvida el ratón."
+Encaja con la filosofía de la extensión y es fácil de recordar.
+Disponible en el Marketplace (comprobado): aún sin ocupar con este enfoque exacto.
+
+
+
+2. Análisis de Viabilidad Técnica
+Esta es la sección más importante del documento. La API de extensiones de VS Code tiene capacidades muy potentes, pero también limitaciones estructurales que debemos conocer antes de diseñar las funcionalidades.
+
+2.1  Lo que SÍ es posible hacer
+
+✅ VIABLE — Detectar clics de ratón en el editor de código
+API: window.onDidChangeTextEditorSelection
+VS Code expone el motivo del cambio de selección con el enum TextEditorSelectionChangeKind.
+El valor Mouse (valor 2) indica que el cursor se movió por un clic de ratón.
+Esto permite detectar cuándo el usuario hace clic dentro del área de edición de código
+y mostrar un aviso con el atajo equivalente (flechas de teclado, Ctrl+G para ir a línea, etc.).
+
+✅ VIABLE — Interceptar y redirigir comandos de VS Code
+API: commands.registerCommand con el mismo ID que un comando nativo.
+Se puede sobrescribir un comando de VS Code para capturarlo antes de que se ejecute.
+Ejemplo: interceptar workbench.action.openSettings y mostrar el atajo Ctrl+, en su lugar.
+Esto funciona para CUALQUIER comando que esté registrado en VS Code.
+Se puede mostrar el atajo y luego decidir si ejecutar el comando original o bloquearlo.
+
+✅ VIABLE — Botón de activación/desactivación en la barra de estado
+API: window.createStatusBarItem
+Se puede crear un ítem permanente en la barra inferior con un icono y texto.
+Un clic lo activa/desactiva (sí, con el ratón — esto es la excepción permitida).
+También se puede asignar un atajo de teclado al comando de toggle.
+Ejemplo: Ctrl+Shift+K para activar/desactivar el modo sin ratón.
+
+✅ VIABLE — Panel WebView con teclado visual y guía de dedos
+API: window.createWebviewPanel
+Se puede abrir un panel HTML/CSS/JS completo dentro de VS Code.
+En este panel se puede dibujar un teclado interactivo que muestre:
+  · Qué dedo debe pulsar cada tecla (código de colores por dedo)
+  · Posición de las manos en reposo (ASDF JKL;)
+  · Resaltado en tiempo real de la tecla que se está pulsando.
+Es la funcionalidad más visual y la que requiere más trabajo de diseño.
+
+✅ VIABLE — Mensajes de aviso no intrusivos con texto personalizado
+API: window.showInformationMessage / showWarningMessage
+Se puede mostrar un aviso en la esquina superior derecha con el atajo correcto.
+Ejemplo: '🖱️ Clic detectado — Usa Ctrl+P para abrir archivos. [OK]'
+El mensaje incluye botones, pero el usuario puede cerrarlo con Escape.
+Limitación: también se puede cerrar con el ratón (no se puede evitar técnicamente).
+
+✅ VIABLE — Referencia de atajos buscable dentro de VS Code
+API: WebView + vscode.commands.getCommands()
+Se puede recuperar la lista completa de comandos registrados en VS Code.
+Combinado con un WebView, se crea un buscador de atajos integrado.
+El usuario escribe 'abrir terminal' y encuentra el atajo correspondiente.
+
+
+2.2  Lo que NO es posible (limitaciones de la API)
+
+❌ NO VIABLE — Bloquear clics en el sidebar, panel de actividad y menús
+VS Code no expone eventos de ratón para las áreas de su propio UI (chrome).
+El explorador de archivos, la barra lateral, los menús, las pestañas de archivos...
+...son elementos internos de VS Code sobre los que las extensiones no tienen control.
+No hay forma de interceptar un clic en el explorador de archivos desde una extensión.
+ALTERNATIVA: Enseñar los atajos equivalentes mediante un panel de referencia.
+
+❌ NO VIABLE — Forzar cierre de mensajes solo con Enter (sin ratón)
+Las notificaciones de VS Code (showInformationMessage) renderizan en el UI nativo.
+El botón 'OK' del mensaje siempre será clickeable con el ratón.
+No se puede hacer que SOLO se pueda cerrar con teclado.
+ALTERNATIVA: Usar un WebView modal propio que sí podemos controlar al 100%.
+
+❌ NO VIABLE — Interceptar las sugerencias ortográficas nativas de VS Code
+Las sugerencias de corrección (los popups que aparecen al pasar por una línea ondulada)
+son parte del Language Server Protocol y del renderizador interno de VS Code.
+Las extensiones pueden aportar diagnósticos, pero no controlar el UI de sugerencias.
+NOTA: Tu extensión 'Corrector' trabaja en el chat de Copilot, no en el editor — por eso funciona.
+
+⚠️  DIFÍCIL — Bloqueo real del ratón en el área del editor
+Técnicamente el WebView puede cubrir el área del editor con un overlay HTML.
+Esto capturaría todos los clics dentro del editor y mostraría los atajos.
+Pero el editor dejaría de funcionar — el usuario no podría escribir tampoco.
+Es una solución parcial y frustrante. Solo recomendable para modo 'entrenamiento puro'.
+ALTERNATIVA RECOMENDADA: Modo 'aviso suave' (detectar + notificar, sin bloquear).
+
+
+
+3. Arquitectura de la Extensión
+
+3.1  Estructura de archivos del proyecto
+
+La extensión seguirá la estructura estándar de un proyecto TypeScript para VS Code:
+
+Archivo / Carpeta
+Propósito
+src/extension.ts
+Punto de entrada — activa/desactiva la extensión
+src/mouseGuard.ts
+Detecta clics de ratón en el editor y notifica
+src/commandInterceptor.ts
+Sobrescribe comandos nativos para mostrar atajos
+src/shortcutDB.ts
+Base de datos de atajos (comando → atajo → descripción)
+src/webview/keyboard.html
+Panel visual del teclado con guía de dedos
+src/statusBar.ts
+Botón de activación en la barra de estado
+package.json
+Declaración de comandos, atajos y configuración
+README.md
+Documentación de la extensión para el Marketplace
+
+
+3.2  Los tres modos de funcionamiento
+
+La extensión tendrá tres modos que el usuario puede cambiar desde la configuración de VS Code:
+
+Modo
+Comportamiento
+Recomendado para
+🟡  Aviso suave
+Detecta clic → muestra notificación → permite la acción igualmente
+Principiantes / inicio
+🟠  Aviso estricto
+Detecta clic → muestra notificación → NO ejecuta la acción
+Nivel intermedio
+🔴  Entrenamiento puro
+WebView overlay cubre el editor, todo con teclado obligatorio
+Práctica intensa
+
+
+
+4. Desglose de Funcionalidades
+
+4.1  Módulo MouseGuard — Guardia del editor
+Es el núcleo de la extensión. Escucha los eventos de cambio de selección del editor y filtra los que provienen del ratón.
+
+Fragmento clave del código:
+
+vscode.window.onDidChangeTextEditorSelection(event => {
+  const kind = event.kind;
+  if (kind === TextEditorSelectionChangeKind.Mouse) {
+    showShortcutHint('editor.navigation');
+  }
+});
+
+
+4.2  Módulo CommandInterceptor — Interceptor de comandos
+Permite capturar comandos específicos de VS Code que normalmente se ejecutan con el ratón y redirigir al usuario hacia el atajo equivalente. Aquí tienes los más relevantes para empezar:
+
+Acción con ratón
+Comando VS Code
+Atajo a enseñar
+Abrir archivo (clic en explorador)
+vscode.open
+Ctrl+P (Quick Open)
+Abrir ajustes (clic engranaje)
+workbench.action.openSettings
+Ctrl+,
+Abrir terminal (clic +)
+workbench.action.terminal.new
+Ctrl+`
+Cambiar de pestaña
+workbench.action.nextEditor
+Ctrl+Tab
+Cerrar pestaña
+workbench.action.closeActiveEditor
+Ctrl+W
+Panel lateral (clic barra)
+workbench.action.toggleSidebarVisibility
+Ctrl+B
+Ir a definición (clic derecho)
+editor.action.revealDefinition
+F12
+Paleta de comandos
+workbench.action.showCommands
+Ctrl+Shift+P
+
+
+4.3  Panel de teclado visual con guía de dedos
+Este módulo es el más visual y diferenciador. Se abrirá como un panel lateral o flotante dentro de VS Code y mostrará un teclado QWERTY en pantalla con:
+
+	•	Código de colores por dedo: cada dedo tiene un color asignado (meñique izquierdo = rojo, anular = naranja, etc.)
+	•	Posición de reposo resaltada: las teclas F y J (con el punto de guía táctil) siempre visibles en un color especial.
+	•	Resaltado en tiempo real: al pulsar una tecla, se ilumina en el panel.
+	•	Indicador del dedo correcto: si pulsas una tecla con el dedo equivocado (fuera del color esperado), el panel te avisa.
+
+🛠️  Tecnología a usar para el panel de teclado
+Se implementará como un WebView Panel (HTML + CSS + JS dentro de VS Code).
+La comunicación editor ↔ panel se hace con la API de mensajes del WebView.
+El panel recibe eventos de teclado del editor y resalta la tecla correspondiente.
+El diseño se puede hacer en HTML/CSS puro — sin frameworks necesarios.
+
+
+4.4  Barra de estado y toggle
+Un ítem en la barra de estado inferior (abajo a la derecha) mostrará el estado actual y permitirá activar/desactivar la extensión con un clic o un atajo de teclado:
+
+Estado
+Aspecto en la barra
+Extensión desactivada
+$(keyboard) KeyMaster: OFF   (texto gris)
+Modo aviso suave
+$(warning) KeyMaster: AVISO   (texto amarillo)
+Modo aviso estricto
+$(circle-slash) KeyMaster: ESTRICTO   (texto naranja)
+Entrenamiento puro
+$(flame) KeyMaster: TRAIN   (texto rojo)
+
+
+
+5. Configuración en package.json
+Todo lo que los usuarios pueden personalizar se declara en el package.json de la extensión. Esto lo gestiona VS Code automáticamente y aparece en la interfaz de Configuración:
+
+Opción de configuración
+Descripción
+keymaster.enabled
+Activar/desactivar la extensión globalmente
+keymaster.mode
+Modo: 'soft' | 'strict' | 'training'
+keymaster.showKeyboardPanel
+Mostrar el panel de teclado al activar
+keymaster.notificationDuration
+Duración del aviso en ms (por defecto: 3000)
+keymaster.ignoredCommands
+Lista de comandos que no se interceptarán
+keymaster.language
+Idioma de los mensajes: 'es' | 'en'
+
+
+
+6. Hoja de Ruta de Desarrollo
+
+Se propone un desarrollo por fases incrementales, de menor a mayor complejidad. Cada fase produce una versión publicable en el Marketplace.
+
+FASE 1 — MVP: Detector de clics y notificaciones   (v0.1.0)
+Objetivo: tener algo funcionando y publicable en el Marketplace.
+• Detectar clics de ratón en el editor (TextEditorSelectionChangeKind.Mouse)
+• Mostrar notificación informativa con el atajo equivalente
+• Botón toggle en la barra de estado (activar/desactivar)
+• Atajo de teclado Ctrl+Shift+K para el toggle
+
+FASE 2 — Interceptor de comandos   (v0.2.0)
+Objetivo: interceptar los comandos más frecuentes y mostrar el atajo correcto.
+• Crear la base de datos shortcutDB con 20-30 atajos esenciales
+• Implementar el módulo CommandInterceptor
+• Añadir los tres modos (soft / strict / training) con configuración
+• Añadir soporte para español e inglés en los mensajes
+
+FASE 3 — Panel de teclado visual   (v0.3.0)
+Objetivo: añadir el panel visual de teclado con guía de dedos — la funcionalidad estrella.
+• Diseñar el teclado QWERTY en HTML/CSS con código de colores por dedo
+• Implementar el WebView Panel y la comunicación con el editor
+• Resaltar teclas en tiempo real al pulsar
+• Añadir indicador visual de posición de manos (ASDF / JKL;)
+
+FASE 4 — Estadísticas y gamificación   (v1.0.0)
+Objetivo: motivar al usuario con datos de su progreso.
+• Contador de clics de ratón interceptados por sesión y total
+• Racha diaria sin ratón (streak)
+• Atajos más usados y 'puntos débiles' del usuario
+• Panel de estadísticas (similar al de tu extensión Corrector)
+
+
+
+7. Flujo de Trabajo Recomendado con Claude + VS Code
+
+Dado que vas a usar Claude Opus para construir el proyecto, aquí tienes el flujo recomendado para sacar el máximo partido:
+
+	•	Crear la estructura base del proyecto con yo  (scaffold TypeScript + extension):
+npm install -g yo generator-code  →  yo code
+	•	Pedirle a Claude Opus el módulo mouseGuard.ts completo, fase por fase.
+	•	Revisar y probar cada módulo con F5 en VS Code antes de pasar al siguiente.
+	•	Usar el contexto de este documento como prompt de sistema para Claude.
+	•	Publicar en el Marketplace al final de cada fase (no al final del todo).
+
+🤖 Prompt de arranque para Claude Opus
+Copia este contexto al inicio de tu conversación con Claude:
+
+"Voy a construir una extensión para VS Code llamada KeyMaster.
+Su objetivo es entrenar al usuario para usar VS Code sin ratón.
+Estoy en la FASE 1. Necesito el fichero mouseGuard.ts que detecte
+TextEditorSelectionChangeKind.Mouse y muestre una notificación con
+el atajo de teclado correspondiente. El proyecto está en TypeScript,
+generado con yo code. Dame el código completo y las instrucciones
+para registrar el listener en extension.ts."
+
+
+
+8. Resumen Ejecutivo
+
+La extensión KeyMaster es técnicamente viable en sus funcionalidades principales. La siguiente tabla resume el estado de cada idea:
+
+Funcionalidad
+Viabilidad
+Fase
+Detectar clics en editor + avisar
+✅ 100% viable
+Fase 1
+Toggle activar/desactivar
+✅ 100% viable
+Fase 1
+Interceptar comandos nativos
+✅ 100% viable
+Fase 2
+Panel visual teclado + dedos
+✅ 100% viable
+Fase 3
+Estadísticas de uso
+✅ 100% viable
+Fase 4
+Bloquear ratón sidebar/menús
+❌ No posible
+No aplica
+Cierre de popups solo con Enter
+⚠️ Parcial (WebView)
+Fase 3
+Interceptar popups ortográficos
+❌ No posible
+No aplica
+
+
+La extensión tiene un nicho claro en el Marketplace: no existe ninguna extensión con este enfoque de entrenamiento de teclado para VS Code específicamente. La combinación de aviso inteligente + panel de teclado visual la hace diferenciadora y útil para cualquier desarrollador que quiera mejorar su productividad.
+
+
+— Fin del documento —

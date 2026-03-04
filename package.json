@@ -1,0 +1,162 @@
+{
+  "name": "keymaster",
+  "displayName": "KeyMaster",
+  "description": "Entrenamiento de atajos de teclado para VS Code, Cursor y Windsurf",
+  "version": "0.1.0",
+  "publisher": "apliarte",
+  "author": {
+    "name": "Javier Mateo (ApliArte)"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apliarte/key-master"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "extensionKind": ["ui", "workspace"],
+  "categories": [
+    "Education",
+    "Keymaps",
+    "Other"
+  ],
+  "keywords": [
+    "keyboard",
+    "shortcuts",
+    "training",
+    "productivity",
+    "atajos"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "KeyMaster",
+      "properties": {
+        "keymaster.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Activar/desactivar KeyMaster"
+        },
+        "keymaster.mode": {
+          "type": "string",
+          "default": "soft",
+          "enum": ["soft", "strict", "training"],
+          "enumDescriptions": [
+            "Aviso suave: detecta clic y muestra atajo, pero permite la acción",
+            "Aviso estricto: detecta clic y bloquea la acción",
+            "Entrenamiento: abre panel con teclado visual"
+          ],
+          "description": "Modo de funcionamiento de KeyMaster"
+        },
+        "keymaster.language": {
+          "type": "string",
+          "default": "es",
+          "enum": ["es", "en"],
+          "enumDescriptions": [
+            "Español",
+            "English"
+          ],
+          "description": "Idioma de las notificaciones y mensajes"
+        },
+        "keymaster.notificationDuration": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 1000,
+          "maximum": 10000,
+          "description": "Duración de las notificaciones en milisegundos"
+        },
+        "keymaster.showKeyboardOnStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Abrir el panel de teclado visual al activar la extensión"
+        },
+        "keymaster.ignoredCommands": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Lista de comandos que KeyMaster no interceptará"
+        },
+        "keymaster.soundEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reproducir sonido al detectar uso del ratón"
+        },
+        "keymaster.statsEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Guardar estadísticas de sesión"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "keymaster.toggle",
+        "title": "KeyMaster: Activar/Desactivar"
+      },
+      {
+        "command": "keymaster.setMode",
+        "title": "KeyMaster: Cambiar modo"
+      },
+      {
+        "command": "keymaster.openKeyboard",
+        "title": "KeyMaster: Abrir teclado visual"
+      },
+      {
+        "command": "keymaster.showStats",
+        "title": "KeyMaster: Mostrar estadísticas"
+      },
+      {
+        "command": "keymaster.clearStats",
+        "title": "KeyMaster: Limpiar estadísticas"
+      },
+      {
+        "command": "keymaster.showShortcutRef",
+        "title": "KeyMaster: Referencia de atajos"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "keymaster.toggle",
+        "key": "ctrl+shift+k",
+        "mac": "cmd+shift+k"
+      },
+      {
+        "command": "keymaster.openKeyboard",
+        "key": "ctrl+shift+j",
+        "mac": "cmd+shift+j"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && node esbuild.js",
+    "check-types": "tsc --noEmit",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && node esbuild.js --production",
+    "lint": "eslint src",
+    "test": "node ./out/test/runTest.js",
+    "pretest": "tsc -p tsconfig.test.json"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.8",
+    "esbuild": "^0.19.11",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^6.18.0",
+    "@typescript-eslint/parser": "^6.18.0"
+  }
+}
