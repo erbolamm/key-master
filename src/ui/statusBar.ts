@@ -14,25 +14,25 @@ const MODE_DISPLAY: Record<KeyMasterMode | 'off', ModeDisplay> = {
   off: {
     icon: '$(keyboard)',
     label: 'OFF',
-    tooltip: 'KeyMaster desactivado — clic para activar',
+    tooltip: 'KeyMaster desactivado — clic para abrir menú',
     color: '',
   },
   soft: {
     icon: '$(warning)',
     label: 'AVISO',
-    tooltip: 'KeyMaster: modo aviso suave — clic para cambiar',
+    tooltip: 'KeyMaster: modo aviso suave — clic para abrir menú',
     color: 'statusBarItem.warningBackground',
   },
   strict: {
     icon: '$(circle-slash)',
     label: 'ESTRICTO',
-    tooltip: 'KeyMaster: modo estricto — clic para cambiar',
+    tooltip: 'KeyMaster: modo estricto — clic para abrir menú',
     color: 'statusBarItem.errorBackground',
   },
   training: {
     icon: '$(flame)',
     label: 'TRAIN',
-    tooltip: 'KeyMaster: modo entrenamiento — clic para cambiar',
+    tooltip: 'KeyMaster: modo entrenamiento — clic para abrir menú',
     color: 'statusBarItem.errorBackground',
   },
 };

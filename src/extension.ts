@@ -52,78 +52,157 @@ export function deactivate(): void {
 
 /** Registra todos los comandos de la extensión */
 function registerCommands(context: vscode.ExtensionContext): void {
-  // keymaster.toggle — Activar/Desactivar
+  // keymaster.toggle — Menú principal desde la barra de estado
   context.subscriptions.push(
     vscode.commands.registerCommand('keymaster.toggle', async () => {
       try {
         const current = config.getConfig();
-        const newEnabled = !current.enabled;
-        await config.setConfigValue('enabled', newEnabled);
-
         const lang = current.language;
-        const msg = newEnabled
-          ? (lang === 'es' ? 'KeyMaster activado ✅' : 'KeyMaster enabled ✅')
-          : (lang === 'es' ? 'KeyMaster desactivado ⏸️' : 'KeyMaster disabled ⏸️');
+        const isES = lang === 'es';
 
-        vscode.window.showInformationMessage(msg);
-        statusBar.refresh();
-        logger.info(msg);
-      } catch (err) {
-        logger.error('Error al hacer toggle', err);
-      }
-    }),
-  );
-
-  // keymaster.setMode — Cambiar modo con QuickPick
-  context.subscriptions.push(
-    vscode.commands.registerCommand('keymaster.setMode', async () => {
-      try {
-        const current = config.getConfig();
-        const lang = current.language;
+        // Indicadores del estado actual
+        const enabledIcon = current.enabled ? '$(check)' : '$(x)';
+        const enabledLabel = current.enabled
+          ? (isES ? 'Activado' : 'Enabled')
+          : (isES ? 'Desactivado' : 'Disabled');
+        const modeLabels: Record<string, string> = {
+          soft: isES ? 'Suave' : 'Soft',
+          strict: isES ? 'Estricto' : 'Strict',
+          training: isES ? 'Entrenamiento' : 'Training',
+        };
+        const langLabels: Record<string, string> = { es: 'Español', en: 'English' };
 
         const items: vscode.QuickPickItem[] = [
           {
-            label: '$(warning) Soft',
-            description: lang === 'es'
-              ? 'Aviso suave: detecta clic y muestra atajo'
-              : 'Soft warning: detect click and show shortcut',
+            label: `${enabledIcon} ${isES ? 'Activar/Desactivar' : 'Enable/Disable'}`,
+            description: enabledLabel,
+            detail: isES ? 'Pulsa para cambiar el estado' : 'Press to toggle state',
+          },
+          { label: '', kind: vscode.QuickPickItemKind.Separator },
+          {
+            label: `$(settings-gear) ${isES ? 'Modo' : 'Mode'}`,
+            description: modeLabels[current.mode] ?? current.mode,
+            detail: isES ? 'Soft · Strict · Training' : 'Soft · Strict · Training',
           },
           {
-            label: '$(circle-slash) Strict',
-            description: lang === 'es'
-              ? 'Estricto: bloquea la acción del ratón'
-              : 'Strict: blocks mouse action',
+            label: `$(globe) ${isES ? 'Idioma' : 'Language'}`,
+            description: langLabels[current.language],
+            detail: isES ? 'Español / English' : 'Spanish / English',
+          },
+          { label: '', kind: vscode.QuickPickItemKind.Separator },
+          {
+            label: `$(list-unordered) ${isES ? 'Referencia de atajos' : 'Shortcut Reference'}`,
+            description: isES ? '21 atajos' : '21 shortcuts',
           },
           {
-            label: '$(flame) Training',
-            description: lang === 'es'
-              ? 'Entrenamiento: teclado visual obligatorio'
-              : 'Training: visual keyboard required',
+            label: `$(keyboard) ${isES ? 'Teclado visual' : 'Visual Keyboard'}`,
+            description: isES ? 'Fase 3' : 'Phase 3',
+          },
+          {
+            label: `$(graph) ${isES ? 'Estadísticas' : 'Statistics'}`,
+            description: isES ? 'Fase 4' : 'Phase 4',
           },
         ];
 
         const selection = await vscode.window.showQuickPick(items, {
-          placeHolder: lang === 'es' ? 'Selecciona el modo de KeyMaster' : 'Select KeyMaster mode',
+          placeHolder: isES
+            ? `⌨️ KeyMaster — ${enabledLabel} · ${modeLabels[current.mode]}` 
+            : `⌨️ KeyMaster — ${enabledLabel} · ${modeLabels[current.mode]}`,
         });
 
-        if (!selection) {
-          return;
+        if (!selection) { return; }
+
+        // Activar/Desactivar
+        if (selection.label.includes(isES ? 'Activar' : 'Enable')) {
+          const newEnabled = !current.enabled;
+          await config.setConfigValue('enabled', newEnabled);
+          statusBar.refresh();
+          const msg = newEnabled
+            ? (isES ? 'KeyMaster activado ✅' : 'KeyMaster enabled ✅')
+            : (isES ? 'KeyMaster desactivado ⏸️' : 'KeyMaster disabled ⏸️');
+          vscode.window.showInformationMessage(msg);
         }
 
-        const modeMap: Record<string, config.KeyMasterMode> = {
-          '$(warning) Soft': 'soft',
-          '$(circle-slash) Strict': 'strict',
-          '$(flame) Training': 'training',
-        };
-        const newMode = modeMap[selection.label];
-        if (newMode) {
-          await config.setConfigValue('mode', newMode);
-          statusBar.refresh();
-          logger.info(`Modo cambiado a: ${newMode}`);
+        // Cambiar modo
+        else if (selection.label.includes(isES ? 'Modo' : 'Mode')) {
+          const modeItems: vscode.QuickPickItem[] = [
+            {
+              label: `$(warning) Soft`,
+              description: current.mode === 'soft' ? (isES ? '← actual' : '← current') : '',
+              detail: isES ? 'Detecta clic y muestra atajo, permite la acción' : 'Detects click, shows shortcut, allows action',
+            },
+            {
+              label: `$(circle-slash) Strict`,
+              description: current.mode === 'strict' ? (isES ? '← actual' : '← current') : '',
+              detail: isES ? 'Detecta clic, muestra atajo y bloquea la acción' : 'Detects click, shows shortcut, blocks action',
+            },
+            {
+              label: `$(flame) Training`,
+              description: current.mode === 'training' ? (isES ? '← actual' : '← current') : '',
+              detail: isES ? 'Teclado visual obligatorio (próximamente)' : 'Visual keyboard required (coming soon)',
+            },
+          ];
+          const modeSelection = await vscode.window.showQuickPick(modeItems, {
+            placeHolder: isES ? 'Selecciona el modo' : 'Select mode',
+          });
+          if (modeSelection) {
+            const modeMap: Record<string, config.KeyMasterMode> = {
+              '$(warning) Soft': 'soft',
+              '$(circle-slash) Strict': 'strict',
+              '$(flame) Training': 'training',
+            };
+            const newMode = modeMap[modeSelection.label];
+            if (newMode) {
+              await config.setConfigValue('mode', newMode);
+              statusBar.refresh();
+              logger.info(`Modo cambiado a: ${newMode}`);
+            }
+          }
         }
+
+        // Cambiar idioma
+        else if (selection.label.includes(isES ? 'Idioma' : 'Language')) {
+          const langItems: vscode.QuickPickItem[] = [
+            { label: '🇪🇸 Español', description: current.language === 'es' ? '← actual' : '' },
+            { label: '🇬🇧 English', description: current.language === 'en' ? '← current' : '' },
+          ];
+          const langSelection = await vscode.window.showQuickPick(langItems, {
+            placeHolder: isES ? 'Selecciona idioma' : 'Select language',
+          });
+          if (langSelection) {
+            const newLang = langSelection.label.includes('Español') ? 'es' : 'en';
+            await config.setConfigValue('language', newLang as config.KeyMasterLanguage);
+            statusBar.refresh();
+            logger.info(`Idioma cambiado a: ${newLang}`);
+          }
+        }
+
+        // Referencia de atajos
+        else if (selection.label.includes(isES ? 'Referencia' : 'Reference')) {
+          await vscode.commands.executeCommand('keymaster.showShortcutRef');
+        }
+
+        // Teclado visual
+        else if (selection.label.includes(isES ? 'Teclado' : 'Keyboard')) {
+          await vscode.commands.executeCommand('keymaster.openKeyboard');
+        }
+
+        // Estadísticas
+        else if (selection.label.includes(isES ? 'Estadísticas' : 'Statistics')) {
+          await vscode.commands.executeCommand('keymaster.showStats');
+        }
+
       } catch (err) {
-        logger.error('Error al cambiar modo', err);
+        logger.error('Error en menú principal', err);
       }
+    }),
+  );
+
+  // keymaster.setMode — Cambiar modo (acceso directo por comando)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('keymaster.setMode', async () => {
+      // Reutilizamos el menú principal
+      await vscode.commands.executeCommand('keymaster.toggle');
     }),
   );
 
