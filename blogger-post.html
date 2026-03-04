@@ -1,12 +1,233 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>KeyMaster — Aprende VS Code sin ratón</title>
-</head>
-<body>
+<div itemscope="" itemtype="https://schema.org/SoftwareApplication"
+    style="background-color: #f8f9fa; border-radius: 15px; color: #1e293b; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: auto; max-width: 850px; padding: 20px;">
 
-<div style="max-width: 850px; margin: 0 auto; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f8f9fa; padding: 20px; border-radius: 15px;">
+    <meta content="KeyMaster — Entrenador de teclado para VS Code" itemprop="name" />
+    <meta content="https://github.com/erbolamm/key-master" itemprop="url" />
+    <meta content="DeveloperApplication" itemprop="applicationCategory" />
+
+    <header
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px; color: white; margin-bottom: 40px; padding: 60px 20px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">⌨️</div>
+        <h2
+            style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0px 0px 15px; text-transform: uppercase;">
+            KeyMaster: Domina el teclado. Olvida el ratón.</h2>
+        <p style="font-size: 18px; margin: auto; max-width: 600px; opacity: 0.9;">Extensión de VS Code que detecta cuando usas el ratón y te enseña el atajo de teclado equivalente. Compatible con VS Code, Cursor y Windsurf.</p>
+        <div
+            style="background: #c4b5fd; border-radius: 50px; color: #3b0764; display: inline-block; font-size: 13px; font-weight: bold; margin-top: 20px; padding: 6px 15px; text-transform: uppercase;">
+            100% Gratuito · Open Source · Bilingüe ES/EN</div>
+
+        <!-- Botones de apoyo -->
+        <div
+            style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 13px; opacity: 0.6;">❤️ Apoya el proyecto:</span>
+            <a href="https://www.paypal.com/paypalme/erbolamm" target="_blank"
+                style="color: rgba(255,255,255,0.85); text-decoration: none; background: rgba(255,255,255,0.12); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); font-size: 12px; font-weight: 600;">💳
+                PayPal</a>
+            <a href="https://ko-fi.com/C0C11TWR1K" target="_blank"
+                style="color: rgba(255,255,255,0.85); text-decoration: none; background: rgba(255,255,255,0.12); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); font-size: 12px; font-weight: 600;">☕
+                Ko-fi</a>
+            <a href="https://github.com/erbolamm/key-master" target="_blank"
+                style="color: rgba(255,255,255,0.85); text-decoration: none; background: rgba(255,255,255,0.12); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); font-size: 12px; font-weight: 600;">⭐
+                GitHub</a>
+        </div>
+    </header>
+
+    <section style="margin-bottom: 40px; padding: 0px 10px;">
+        <p itemprop="description" style="color: #334155; font-size: 18px;">
+            ¿Eres desarrollador y todavía dependes del ratón para todo? ¿Cambias de pestaña con clic, abres archivos con el explorador, buscas con el menú? Con <strong>KeyMaster</strong> cada vez que uses el ratón en el editor, verás una notificación que te recuerda el atajo de teclado correcto. Sin castigos, solo aprendizaje progresivo.
+        </p>
+    </section>
+
+    <!-- Ejemplo visual -->
+    <div style="background: #1e1e2e; border-radius: 12px; margin-bottom: 40px; padding: 25px; color: #cdd6f4;">
+        <div style="font-size: 13px; color: #6c7086; margin-bottom: 15px; font-family: monospace;">🖱️ Editor de VS Code</div>
+        <div style="margin-bottom: 20px;">
+            <span style="color: #f38ba8; font-weight: 600;">Haces clic con el ratón en el editor:</span>
+            <div style="background: #313244; border-radius: 8px; padding: 12px; margin-top: 5px; font-family: monospace; font-size: 14px; color: #f38ba8;">
+                [clic] → mover cursor a línea 42
+            </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <span style="color: #a6e3a1; font-weight: 600;">KeyMaster te avisa:</span>
+            <div style="background: #313244; border-radius: 8px; padding: 12px; margin-top: 5px; font-size: 14px;">
+                <div style="color: #f9e2af; margin-bottom: 10px;">⚠️ <strong>Clic detectado — Usa un atajo en su lugar:</strong></div>
+                <div style="color: #cdd6f4; font-size: 15px; margin-bottom: 8px;">→ <strong>Ctrl+G</strong> para ir a una línea específica</div>
+                <div style="color: #cdd6f4; font-size: 15px; margin-bottom: 8px;">→ <strong>Ctrl+P</strong> para abrir archivos rápido</div>
+                <div style="color: #cdd6f4; font-size: 15px;">→ <strong>Ctrl+F</strong> para buscar en el archivo</div>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="font-size: 24px; margin-bottom: 25px; text-align: center;">¿Qué hace KeyMaster?</h3>
+    <div
+        style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 40px;">
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">🖱️</div>
+            <strong style="display: block; margin-bottom: 8px;">Detecta clics de ratón</strong>
+            <span style="color: #64748b; font-size: 14px;">Monitoriza el editor en tiempo real y avisa cada vez que usas el ratón en lugar del teclado.</span>
+        </div>
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">🟡🟠🔴</div>
+            <strong style="display: block; margin-bottom: 8px;">3 modos de entrenamiento</strong>
+            <span style="color: #64748b; font-size: 14px;"><strong>Soft</strong>: avisa pero permite. <strong>Strict</strong>: avisa y bloquea. <strong>Training</strong>: teclado visual completo.</span>
+        </div>
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">📖</div>
+            <strong style="display: block; margin-bottom: 8px;">21+ atajos incluidos</strong>
+            <span style="color: #64748b; font-size: 14px;">Navegación, edición, búsqueda, terminal, Git... Los más usados de VS Code listos desde el primer día.</span>
+        </div>
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">🌍</div>
+            <strong style="display: block; margin-bottom: 8px;">Español e Inglés</strong>
+            <span style="color: #64748b; font-size: 14px;">Todas las notificaciones en dos idiomas. Cambia desde la configuración con un clic.</span>
+        </div>
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">⚡</div>
+            <strong style="display: block; margin-bottom: 8px;">Toggle instantáneo</strong>
+            <span style="color: #64748b; font-size: 14px;">Activa o desactiva con <strong>Ctrl+Shift+K</strong> desde cualquier parte del editor. Sin menús.</span>
+        </div>
+        <div
+            style="background: white; border-radius: 12px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 6px; padding: 20px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">🎯</div>
+            <strong style="display: block; margin-bottom: 8px;">Compatible con todo</strong>
+            <span style="color: #64748b; font-size: 14px;">VS Code, Cursor AI y Windsurf. Windows, macOS y Linux. Usar en local y en remoto.</span>
+        </div>
+    </div>
+
+    <!-- Cómo instalar -->
+    <h3
+        style="border-bottom: 2px solid rgb(226, 232, 240); font-size: 24px; margin-bottom: 20px; padding-bottom: 10px;">
+        🛠️ Cómo instalar</h3>
+    <div style="margin-bottom: 40px;">
+        <div style="align-items: flex-start; display: flex; margin-bottom: 15px;">
+            <div
+                style="align-items: center; background: #667eea; border-radius: 50%; color: white; display: flex; font-weight: bold; height: 30px; justify-content: center; margin-right: 15px; min-width: 30px;">
+                1</div>
+            <div>Abre <strong>VS Code, Cursor o Windsurf</strong></div>
+        </div>
+        <div style="align-items: flex-start; display: flex; margin-bottom: 15px;">
+            <div
+                style="align-items: center; background: #667eea; border-radius: 50%; color: white; display: flex; font-weight: bold; height: 30px; justify-content: center; margin-right: 15px; min-width: 30px;">
+                2</div>
+            <div>Busca <strong>"KeyMaster"</strong> en extensiones <strong>(Ctrl+Shift+X)</strong></div>
+        </div>
+        <div style="align-items: flex-start; display: flex; margin-bottom: 15px;">
+            <div
+                style="align-items: center; background: #667eea; border-radius: 50%; color: white; display: flex; font-weight: bold; height: 30px; justify-content: center; margin-right: 15px; min-width: 30px;">
+                3</div>
+            <div>Instala y aparecerá <strong>KeyMaster: OFF</strong> en la barra de estado inferior izquierda</div>
+        </div>
+        <div style="align-items: flex-start; display: flex; margin-bottom: 15px;">
+            <div
+                style="align-items: center; background: #667eea; border-radius: 50%; color: white; display: flex; font-weight: bold; height: 30px; justify-content: center; margin-right: 15px; min-width: 30px;">
+                4</div>
+            <div>Haz clic en el ítem de la barra o pulsa <strong>Ctrl+Shift+K</strong> para activarlo</div>
+        </div>
+        <div style="align-items: flex-start; display: flex; margin-bottom: 15px;">
+            <div
+                style="align-items: center; background: #667eea; border-radius: 50%; color: white; display: flex; font-weight: bold; height: 30px; justify-content: center; margin-right: 15px; min-width: 30px;">
+                5</div>
+            <div>¡Listo! Cada vez que <strong>hagas clic con el ratón</strong> en el editor, verás la notificación con el atajo correcto</div>
+        </div>
+    </div>
+
+    <!-- Atajos que aprenderás -->
+    <div style="background: rgb(241, 245, 249); border-radius: 12px; margin-bottom: 40px; padding: 25px;">
+        <h3 style="margin-top: 0px;">Atajos que aprenderás a usar</h3>
+        <table style="border-collapse: collapse; font-size: 14px; width: 100%;">
+            <tbody>
+                <tr style="border-bottom: 1px solid rgb(203, 213, 225);">
+                    <td style="font-weight: bold; padding: 10px;">Abrir archivo</td>
+                    <td style="padding: 10px;">Ctrl+P en lugar de buscar con el ratón</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgb(203, 213, 225);">
+                    <td style="font-weight: bold; padding: 10px;">Ir a línea</td>
+                    <td style="padding: 10px;">Ctrl+G en lugar de hacer clic en el número</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgb(203, 213, 225);">
+                    <td style="font-weight: bold; padding: 10px;">Cambiar pestaña</td>
+                    <td style="padding: 10px;">Ctrl+Tab en lugar de clic en la pestaña</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgb(203, 213, 225);">
+                    <td style="font-weight: bold; padding: 10px;">Buscar en archivo</td>
+                    <td style="padding: 10px;">Ctrl+F en lugar del menú</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgb(203, 213, 225);">
+                    <td style="font-weight: bold; padding: 10px;">Terminal</td>
+                    <td style="padding: 10px;">Ctrl+` en lugar de clic en el panel</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 10px;">Y 16 más...</td>
+                    <td style="padding: 10px;">Navegación, edición, Git, búsqueda global, ajustes...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Comandos -->
+    <div style="background: #1e1e2e; border-radius: 12px; margin-bottom: 40px; padding: 25px; color: #cdd6f4;">
+        <h3 style="color: #cdd6f4; margin-top: 0px;">⌨️ Comandos de la extensión</h3>
+        <div style="font-family: monospace; font-size: 14px; line-height: 2;">
+            <div><span style="color: #89b4fa;">Ctrl+Shift+K</span> <span style="color: #6c7086;">— Activar/Desactivar KeyMaster</span></div>
+            <div><span style="color: #89b4fa;">Ctrl+Shift+J</span> <span style="color: #6c7086;">— Abrir teclado visual (próximamente)</span></div>
+            <div><span style="color: #f9e2af;">KeyMaster: Cambiar modo</span> <span style="color: #6c7086;">— Soft / Strict / Training</span></div>
+            <div><span style="color: #f9e2af;">KeyMaster: Referencia de atajos</span> <span style="color: #6c7086;">— Lista buscable completa</span></div>
+            <div><span style="color: #f9e2af;">KeyMaster: Mostrar estadísticas</span> <span style="color: #6c7086;">— Tu progreso (próximamente)</span></div>
+        </div>
+    </div>
+
+    <!-- CTA principal -->
+    <div style="margin: 40px 0px; text-align: center;">
+        <a href="https://github.com/erbolamm/key-master" rel="noopener"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50px; box-shadow: rgba(102, 126, 234, 0.3) 0px 10px 20px; color: white; display: inline-block; font-size: 18px; font-weight: 800; padding: 18px 35px; text-decoration: none; margin-bottom: 12px;"
+            target="_blank" title="Ver KeyMaster en GitHub">🚀 VER EN GITHUB</a>
+        <br />
+        <a href="https://github.com/erbolamm/key-master" rel="noopener"
+            style="color: #667eea; display: inline-block; font-size: 14px; font-weight: 600; margin-top: 8px; text-decoration: none;"
+            target="_blank">⭐ Dale una estrella en GitHub</a>
+    </div>
+
+    <!-- Redes sociales y apoyo -->
+    <div style="background: #f1f5f9; border-radius: 12px; padding: 25px; margin-bottom: 30px; text-align: center;">
+        <h4 style="margin-top: 0; color: #334155; font-size: 16px; margin-bottom: 15px;">🤝 Sígueme y apoya el proyecto</h4>
+        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+            <a href="https://github.com/erbolamm" target="_blank"
+                style="background: #24292e; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">🐙 GitHub</a>
+            <a href="https://twitter.com/intent/tweet?text=%E2%8C%A8%EF%B8%8F%20KeyMaster%3A%20aprende%20a%20usar%20VS%20Code%20sin%20rat%C3%B3n.%20Extensi%C3%B3n%20gratuita%20de%20entrenamiento%20de%20atajos%20de%20teclado%20%F0%9F%9A%80&url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master"
+                target="_blank"
+                style="background: #1da1f2; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">🐦 Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master"
+                target="_blank"
+                style="background: #0077b5; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">💼 LinkedIn</a>
+            <a href="https://t.me/share/url?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master&text=%E2%8C%A8%EF%B8%8F%20KeyMaster%20-%20aprende%20VS%20Code%20sin%20rat%C3%B3n"
+                target="_blank"
+                style="background: #0088cc; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">✈️ Telegram</a>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+            <a href="https://www.paypal.com/paypalme/erbolamm" target="_blank"
+                style="background: #003087; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">💳 PayPal</a>
+            <a href="https://ko-fi.com/C0C11TWR1K" target="_blank"
+                style="background: #ff5e5b; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">☕ Ko-fi</a>
+            <a href="https://streamelements.com/apliarte/tip" target="_blank"
+                style="background: #6441a5; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">🎮 Twitch Tip</a>
+        </div>
+    </div>
+
+    <footer
+        style="background: #1e1e2e; border-radius: 12px; color: #94a3b8; font-size: 12px; padding: 20px; text-align: center;">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhzf6NXXt-CylHi5Ws-jAuLmbYazaeE5cPHraKk-mKi1L9QXCqNqvqz74JewDIlmGWQuqNyct5PtttawjSOcSj2RRWDldiPBmJ7s44zEbGqyjv-PpqXrh040Rklah9jWr_EF1AymH2VJ0E1plGS7YfP5lpjRZj8lXnopxWJjghCJsmVhWsfFrp4Z2e9xWk/s320/aplikt.png" alt="ApliArte" style="width: 80px; margin-bottom: 15px; border-radius: 10px;"><br/>
+        © 2026 <a href="https://apliarte-click-pro-2026.web.app/" target="_blank"
+            style="color: #c4b5fd; text-decoration: none; font-weight: 600;">ApliArte</a> · Extensiones de VS Code para todos<br />
+        Hecho con pasión por Javier Mateo | <a href="https://github.com/erbolamm/key-master" target="_blank"
+            style="color: #c4b5fd; text-decoration: none;">Open Source</a>
+    </footer>
+
+</div>
 
 <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; color: white; padding: 60px 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
   <div style="font-size: 64px; margin-bottom: 20px;">⌨️</div>
