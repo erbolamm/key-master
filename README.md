@@ -65,6 +65,18 @@ Extensión de entrenamiento para aprender a usar VS Code, Cursor y Windsurf sin 
 
 **Javier Mateo** — [ApliArte](https://github.com/apliarte)
 
+## 💖 Apoya el proyecto
+
+Herramienta gratuita y open source. Si te ahorra tiempo, un cafe ayuda a mantener el desarrollo.
+
+| Plataforma | Enlace |
+|------------|--------|
+| PayPal | [paypal.me/erbolamm](https://paypal.me/erbolamm) |
+| Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
+| Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
+
+🌐 [Sitio oficial](https://apliarte-click-pro-2026.web.app/) · 📦 [GitHub](https://github.com/erbolamm/key-master)
+
 ## Licencia
 
 MIT
