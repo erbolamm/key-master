@@ -8,6 +8,11 @@ Extensión de entrenamiento para aprender a usar VS Code, Cursor y Windsurf sin 
 
 - **Detección de clics de ratón** en el editor de código con notificación del atajo equivalente
 - **3 modos de funcionamiento**: Suave (avisa), Estricto (bloquea), Entrenamiento (teclado visual)
+- **Interceptor de comandos**: bloquea 20 comandos nativos (abrir settings, terminal, cerrar pestaña...) y te enseña el atajo
+- **42 atajos incluidos**: navegación, edición, búsqueda, terminal, Git y más
+- **Teclado visual QWERTY** con guía de colores por dedo y posición de reposo
+- **Estadísticas de uso**: clics de ratón, atajos mostrados, racha diaria, top 5 atajos
+- **Efectos de sonido** opcionales al detectar clic (modo suave y alerta)
 - **Toggle rápido** desde la barra de estado o con `Ctrl+Shift+K` / `Cmd+Shift+K`
 - **Referencia de atajos** buscable integrada en VS Code
 - **Bilingüe**: español e inglés
@@ -19,14 +24,15 @@ Extensión de entrenamiento para aprender a usar VS Code, Cursor y Windsurf sin 
 2. KeyMaster aparece en la barra de estado inferior izquierda
 3. Actívalo con clic en la barra o con `Cmd+Shift+K` / `Ctrl+Shift+K`
 4. Cada vez que hagas clic con el ratón en el editor, verás una notificación con el atajo de teclado que deberías usar
+5. En modo estricto, además se bloquean 20 comandos nativos que sueles ejecutar con el ratón
 
 ## Modos
 
 | Modo | Comportamiento |
 |------|----------------|
 | 🟡 Suave (soft) | Detecta clic → muestra atajo → permite la acción |
-| 🟠 Estricto (strict) | Detecta clic → muestra atajo → bloquea la acción |
-| 🔴 Entrenamiento (training) | Teclado visual con guía de dedos |
+| 🟠 Estricto (strict) | Detecta clic → muestra atajo → bloquea la acción + intercepta comandos |
+| 🔴 Entrenamiento (training) | Como estricto + teclado visual con guía de dedos |
 
 ## Atajos de la extensión
 
@@ -40,8 +46,9 @@ Extensión de entrenamiento para aprender a usar VS Code, Cursor y Windsurf sin 
 - `KeyMaster: Activar/Desactivar` — Toggle on/off
 - `KeyMaster: Cambiar modo` — Elegir entre suave, estricto y entrenamiento
 - `KeyMaster: Referencia de atajos` — Lista buscable de atajos de VS Code
-- `KeyMaster: Abrir teclado visual` — Panel de entrenamiento (próximamente)
-- `KeyMaster: Mostrar estadísticas` — Estadísticas de uso (próximamente)
+- `KeyMaster: Abrir teclado visual` — Panel QWERTY con colores por dedo
+- `KeyMaster: Mostrar estadísticas` — Panel con clics, racha y top 5 atajos
+- `KeyMaster: Limpiar estadísticas` — Reiniciar contadores
 
 ## Configuración
 
@@ -52,7 +59,8 @@ Extensión de entrenamiento para aprender a usar VS Code, Cursor y Windsurf sin 
 | `keymaster.language` | enum | `"es"` | Idioma: es, en |
 | `keymaster.notificationDuration` | number | `3000` | Duración del aviso (ms) |
 | `keymaster.showKeyboardOnStart` | boolean | `false` | Abrir teclado al activar |
-| `keymaster.statsEnabled` | boolean | `true` | Guardar estadísticas |
+| `keymaster.soundEnabled` | boolean | `false` | Reproducir sonido al detectar clic |
+| `keymaster.statsEnabled` | boolean | `true` | Guardar estadísticas de sesión |
 
 ## Compatibilidad
 

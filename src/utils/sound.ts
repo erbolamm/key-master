@@ -51,8 +51,9 @@ export async function play(filename: string): Promise<void> {
     await execFileAsync('afplay', [soundPath]);
   } else if (process.platform === 'win32') {
     await execFileAsync('powershell', [
-      '-NoProfile', '-Command',
-      `(New-Object System.Media.SoundPlayer '${soundPath}').PlaySync()`,
+      '-NoProfile', '-NonInteractive', '-Command',
+      '(New-Object System.Media.SoundPlayer $args[0]).PlaySync()',
+      soundPath,
     ]);
   } else {
     // Linux: intentar paplay, luego aplay

@@ -68,7 +68,6 @@ function handleSelectionChange(
     return;
   }
 
-  // Llegados aquí, kind es Mouse (2) o undefined — ambos pueden ser clics reales
   const config = getConfig();
   if (!config.enabled) {
     return;
@@ -83,20 +82,27 @@ function handleSelectionChange(
 
   logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'}, mode=${config.mode})`);
 
-  // Registrar clic en estadísticas
+  const shortcut = trackAndPickShortcut(config);
+  respondToClick(config, shortcut);
+}
+
+/** Registra el clic en estadísticas y elige un atajo rotatorio */
+function trackAndPickShortcut(config: ReturnType<typeof getConfig>): ShortcutEntry {
   if (config.statsEnabled) {
     recordMouseClick();
   }
-
-  // Elegir un atajo rotatorio (nunca repetir el anterior)
   const shortcut = getNextShortcut();
-
-  // Registrar atajo mostrado en estadísticas
   if (config.statsEnabled) {
     recordShortcutShown(shortcut.command);
   }
+  return shortcut;
+}
 
-  // Responder según el modo
+/** Responde al clic según el modo activo */
+function respondToClick(
+  config: ReturnType<typeof getConfig>,
+  shortcut: ShortcutEntry,
+): void {
   switch (config.mode) {
     case 'soft':
       showShortcutNotification(shortcut);
@@ -108,7 +114,7 @@ function handleSelectionChange(
     case 'strict':
     case 'training':
       showBlocker(shortcut);
-      playAlert(); // Siempre suena en modo estricto/training
+      playAlert();
       break;
   }
 }
