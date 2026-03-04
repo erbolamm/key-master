@@ -2,7 +2,7 @@
   "name": "keymaster",
   "displayName": "KeyMaster",
   "description": "Entrenamiento de atajos de teclado para VS Code, Cursor y Windsurf",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "apliarte",
   "author": {
     "name": "Javier Mateo (ApliArte)"
@@ -16,7 +16,10 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "extensionKind": ["ui", "workspace"],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
   "categories": [
     "Education",
     "Keymaps",
@@ -45,7 +48,11 @@
         "keymaster.mode": {
           "type": "string",
           "default": "soft",
-          "enum": ["soft", "strict", "training"],
+          "enum": [
+            "soft",
+            "strict",
+            "training"
+          ],
           "enumDescriptions": [
             "Aviso suave: detecta clic y muestra atajo, pero permite la acción",
             "Aviso estricto: detecta clic y bloquea la acción",
@@ -56,7 +63,10 @@
         "keymaster.language": {
           "type": "string",
           "default": "es",
-          "enum": ["es", "en"],
+          "enum": [
+            "es",
+            "en"
+          ],
           "enumDescriptions": [
             "Español",
             "English"
