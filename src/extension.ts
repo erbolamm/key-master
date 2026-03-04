@@ -26,18 +26,19 @@ export function activate(context: vscode.ExtensionContext): void {
   // 5. Registrar comandos
   registerCommands(context);
 
-  // 6. Confirmación visual de activación
+  // 6. Confirmación visual de activación — SIEMPRE visible
   const cfg = config.getConfig();
   const lang = cfg.language;
-  if (cfg.enabled) {
-    vscode.window.showInformationMessage(
-      lang === 'es'
-        ? '⌨️ KeyMaster activado — haz clic en el editor para probar'
-        : '⌨️ KeyMaster enabled — click in the editor to test',
-    );
-  }
+  const statusMsg = cfg.enabled
+    ? (lang === 'es'
+        ? '⌨️ KeyMaster ACTIVO — modo ' + cfg.mode.toUpperCase() + '. Haz clic en el editor para probar.'
+        : '⌨️ KeyMaster ACTIVE — mode ' + cfg.mode.toUpperCase() + '. Click in the editor to test.')
+    : (lang === 'es'
+        ? '⌨️ KeyMaster cargado pero DESACTIVADO. Pulsa Cmd+Shift+K para activar.'
+        : '⌨️ KeyMaster loaded but DISABLED. Press Cmd+Shift+K to enable.');
+  vscode.window.showWarningMessage(statusMsg);
 
-  logger.info('KeyMaster activado correctamente');
+  logger.info('KeyMaster activado correctamente — enabled=' + cfg.enabled + ' mode=' + cfg.mode);
 }
 
 /**

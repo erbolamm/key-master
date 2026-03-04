@@ -11,7 +11,7 @@ let selectionListener: vscode.Disposable | undefined;
 let configListener: vscode.Disposable | undefined;
 // Control de frecuencia para evitar spam de notificaciones
 let lastNotificationTime = 0;
-const NOTIFICATION_COOLDOWN_MS = 2000;
+const NOTIFICATION_COOLDOWN_MS = 3000;
 
 /**
  * Activa el módulo MouseGuard.
@@ -48,16 +48,22 @@ export function deactivate(): void {
 
 /**
  * Maneja un evento de cambio de selección.
- * Solo actúa si el cambio fue provocado por el ratón.
+ * Detecta clics de ratón y muestra sugerencia de atajo.
+ *
+ * NOTA CRÍTICA: event.kind puede ser undefined en muchas versiones de VS Code
+ * y en forks como Cursor/Windsurf. Solo descartamos Keyboard y Command
+ * explícitos. Undefined y Mouse se tratan como posible clic de ratón.
  */
 function handleSelectionChange(
   event: vscode.TextEditorSelectionChangeEvent,
 ): void {
-  // Solo nos interesa si el cambio fue por clic de ratón
-  if (event.kind !== vscode.TextEditorSelectionChangeKind.Mouse) {
+  // Descartar cambios explícitos de teclado o comandos programáticos
+  if (event.kind === vscode.TextEditorSelectionChangeKind.Keyboard ||
+      event.kind === vscode.TextEditorSelectionChangeKind.Command) {
     return;
   }
 
+  // Llegados aquí, kind es Mouse (2) o undefined — ambos pueden ser clics reales
   const config = getConfig();
   if (!config.enabled) {
     return;
@@ -70,10 +76,9 @@ function handleSelectionChange(
   }
   lastNotificationTime = now;
 
-  logger.info('MouseGuard: clic de ratón detectado en el editor');
+  logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'})`);
 
   // Para la Fase 1 mostramos atajos de navegación sugeridos
-  // En la Fase 2, el CommandInterceptor dará atajos más específicos
   const navigationShortcuts = [
     findShortcutByCommand('workbench.action.gotoLine'),
     findShortcutByCommand('workbench.action.quickOpen'),
