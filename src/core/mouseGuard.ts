@@ -4,9 +4,11 @@ import { showShortcutNotification } from '../ui/notifier';
 import { showBlocker } from '../ui/blockerPanel';
 import { playSoft, playAlert } from '../utils/sound';
 import { logger } from '../utils/logger';
+import { recordMouseClick, recordShortcutShown } from './sessionStats';
 import {
-  findShortcutByCommand,
   getRandomShortcut,
+  shortcuts,
+  type ShortcutEntry,
 } from '../data/shortcuts';
 
 let selectionListener: vscode.Disposable | undefined;
@@ -14,6 +16,8 @@ let configListener: vscode.Disposable | undefined;
 // Control de frecuencia para evitar spam de notificaciones
 let lastNotificationTime = 0;
 const NOTIFICATION_COOLDOWN_MS = 3000;
+// Índice rotatorio para no repetir atajos consecutivos
+let lastShortcutIndex = -1;
 
 /**
  * Activa el módulo MouseGuard.
@@ -79,16 +83,18 @@ function handleSelectionChange(
 
   logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'}, mode=${config.mode})`);
 
-  // Elegir un atajo para mostrar
-  const navigationShortcuts = [
-    findShortcutByCommand('workbench.action.gotoLine'),
-    findShortcutByCommand('workbench.action.quickOpen'),
-    findShortcutByCommand('actions.find'),
-  ].filter((s): s is NonNullable<typeof s> => s !== undefined);
+  // Registrar clic en estadísticas
+  if (config.statsEnabled) {
+    recordMouseClick();
+  }
 
-  const shortcut = navigationShortcuts.length > 0
-    ? navigationShortcuts[Math.floor(Math.random() * navigationShortcuts.length)]
-    : getRandomShortcut();
+  // Elegir un atajo rotatorio (nunca repetir el anterior)
+  const shortcut = getNextShortcut();
+
+  // Registrar atajo mostrado en estadísticas
+  if (config.statsEnabled) {
+    recordShortcutShown(shortcut.command);
+  }
 
   // Responder según el modo
   switch (config.mode) {
@@ -105,4 +111,21 @@ function handleSelectionChange(
       playAlert(); // Siempre suena en modo estricto/training
       break;
   }
+}
+
+/**
+ * Devuelve un atajo diferente cada vez, evitando repetir el anterior.
+ * Rota entre todos los atajos de la base de datos.
+ */
+function getNextShortcut(): ShortcutEntry {
+  let shortcut = getRandomShortcut();
+  if (shortcuts.length > 1) {
+    const idx = shortcuts.indexOf(shortcut);
+    if (idx === lastShortcutIndex) {
+      const newIdx = (idx + 1) % shortcuts.length;
+      shortcut = shortcuts[newIdx];
+    }
+    lastShortcutIndex = shortcuts.indexOf(shortcut);
+  }
+  return shortcut;
 }

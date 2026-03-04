@@ -11,8 +11,8 @@ enum LogLevel {
 // Canal de salida para los logs de KeyMaster
 let outputChannel: vscode.OutputChannel | undefined;
 
-// Nivel mínimo de log — DEBUG para diagnosticar problemas
-let currentLevel: LogLevel = LogLevel.DEBUG;
+// Nivel mínimo de log — INFO para producción
+let currentLevel: LogLevel = LogLevel.INFO;
 
 /** Inicializa el logger creando el canal de salida */
 function activate(): void {

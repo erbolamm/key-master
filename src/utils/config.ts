@@ -42,8 +42,12 @@ export async function setConfigValue<K extends keyof KeyMasterConfig>(
   key: K,
   value: KeyMasterConfig[K],
 ): Promise<void> {
-  const cfg = vscode.workspace.getConfiguration('keymaster');
-  await cfg.update(key, value, vscode.ConfigurationTarget.Global);
+  try {
+    const cfg = vscode.workspace.getConfiguration('keymaster');
+    await cfg.update(key, value, vscode.ConfigurationTarget.Global);
+  } catch (err) {
+    logger.error(`Error al actualizar config ${key}`, err);
+  }
 }
 
 /** Registra el listener de cambios de configuración */

@@ -66,15 +66,19 @@ function updateDisplay(): void {
   if (!statusBarItem) {
     return;
   }
-  const config = getConfig();
-  const key = config.enabled ? config.mode : 'off';
-  const display = MODE_DISPLAY[key];
+  try {
+    const config = getConfig();
+    const key = config.enabled ? config.mode : 'off';
+    const display = MODE_DISPLAY[key];
 
-  statusBarItem.text = `${display.icon} KeyMaster: ${display.label}`;
-  statusBarItem.tooltip = display.tooltip;
-  statusBarItem.backgroundColor = display.color
-    ? new vscode.ThemeColor(display.color)
-    : undefined;
+    statusBarItem.text = `${display.icon} KeyMaster: ${display.label}`;
+    statusBarItem.tooltip = display.tooltip;
+    statusBarItem.backgroundColor = display.color
+      ? new vscode.ThemeColor(display.color)
+      : undefined;
+  } catch (err) {
+    logger.error('Error al actualizar StatusBar', err);
+  }
 }
 
 /** Fuerza la actualización del display (para llamar desde extension.ts) */

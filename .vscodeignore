@@ -5,6 +5,7 @@ src/
 test/
 !dist/extension.js
 !media/**
+!src/ui/keyboardPanel/keyboard.html
 .gitignore
 .vscode/
 tsconfig.json
@@ -15,3 +16,4 @@ icon.svg
 **/*.ts
 KeyMaster_Guia_Tecnica.txt
 KeyMaster_Guia_Tecnica.docx
+blogger-post.html

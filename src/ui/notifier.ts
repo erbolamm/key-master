@@ -43,7 +43,11 @@ export function showShortcutNotification(entry?: ShortcutEntry): void {
   logger.info(`Notificación: ${text}`);
 
   // Usamos showWarningMessage para que sea más visible
-  vscode.window.showWarningMessage(text);
+  try {
+    vscode.window.showWarningMessage(text);
+  } catch (err) {
+    logger.error('Error al mostrar notificación', err);
+  }
 }
 
 /**
@@ -58,5 +62,9 @@ export function showShortcutTip(entry: ShortcutEntry): void {
   const desc = getDescription(entry, lang);
 
   const text = `${msg.tip}: ${desc} → ${key}`;
-  vscode.window.showInformationMessage(text);
+  try {
+    vscode.window.showInformationMessage(text);
+  } catch (err) {
+    logger.error('Error al mostrar consejo', err);
+  }
 }

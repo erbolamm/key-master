@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';">
+<style>
+  :root {
+    --finger-1: #E74C3C;   /* meñique izquierdo */
+    --finger-2: #E67E22;   /* anular izquierdo */
+    --finger-3: #F1C40F;   /* corazón izquierdo */
+    --finger-4: #2ECC71;   /* índice izquierdo */
+    --finger-5: #27AE60;   /* índice derecho */
+    --finger-6: #3498DB;   /* corazón derecho */
+    --finger-7: #9B59B6;   /* anular derecho */
+    --finger-8: #E91E63;   /* meñique derecho */
+    --finger-0: #95A5A6;   /* pulgares */
+    --bg: #1e1e1e;
+    --key-bg: #2d2d2d;
+    --key-border: #444;
+    --key-text: #d4d4d4;
+    --highlight: #fff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    user-select: none;
+  }
+
+  h1 {
+    color: var(--key-text);
+    font-size: 18px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--key-text);
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 44px;
+    background: var(--key-bg);
+    border: 2px solid var(--key-border);
+    border-radius: 6px;
+    color: var(--key-text);
+    font-size: 13px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    position: relative;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .key[data-finger="1"] { border-bottom: 3px solid var(--finger-1); }
+  .key[data-finger="2"] { border-bottom: 3px solid var(--finger-2); }
+  .key[data-finger="3"] { border-bottom: 3px solid var(--finger-3); }
+  .key[data-finger="4"] { border-bottom: 3px solid var(--finger-4); }
+  .key[data-finger="5"] { border-bottom: 3px solid var(--finger-5); }
+  .key[data-finger="6"] { border-bottom: 3px solid var(--finger-6); }
+  .key[data-finger="7"] { border-bottom: 3px solid var(--finger-7); }
+  .key[data-finger="8"] { border-bottom: 3px solid var(--finger-8); }
+  .key[data-finger="0"] { border-bottom: 3px solid var(--finger-0); }
+
+  .key.highlight {
+    background: #4a9eff;
+    color: var(--highlight);
+    border-color: #4a9eff;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+    z-index: 10;
+  }
+
+  /* Marcador de posición de reposo para F y J */
+  .key.home::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 2px;
+    background: var(--key-text);
+    border-radius: 1px;
+  }
+
+  /* Tamaños especiales */
+  .key-tab     { min-width: 72px; }
+  .key-caps    { min-width: 84px; }
+  .key-shift   { min-width: 108px; }
+  .key-ctrl    { min-width: 60px; }
+  .key-space   { min-width: 300px; flex-grow: 1; max-width: 340px; }
+  .key-back    { min-width: 84px; }
+  .key-enter   { min-width: 96px; }
+
+  .info {
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: #252525;
+    border-radius: 8px;
+    color: #8b949e;
+    font-size: 13px;
+    text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info .shortcut-name {
+    color: #58a6ff;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <h1>⌨️ KeyMaster — ${title}</h1>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-1)"></div>${legendPinkyL}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-2)"></div>${legendRingL}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-3)"></div>${legendMiddleL}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-4)"></div>${legendIndexL}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-5)"></div>${legendIndexR}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-6)"></div>${legendMiddleR}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-7)"></div>${legendRingR}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-8)"></div>${legendPinkyR}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--finger-0)"></div>${legendThumbs}</div>
+  </div>
+
+  <div class="keyboard">
+    <!-- Fila de números -->
+    <div class="row">
+      <div class="key" data-key="`" data-finger="1">`</div>
+      <div class="key" data-key="1" data-finger="1">1</div>
+      <div class="key" data-key="2" data-finger="2">2</div>
+      <div class="key" data-key="3" data-finger="3">3</div>
+      <div class="key" data-key="4" data-finger="4">4</div>
+      <div class="key" data-key="5" data-finger="4">5</div>
+      <div class="key" data-key="6" data-finger="5">6</div>
+      <div class="key" data-key="7" data-finger="5">7</div>
+      <div class="key" data-key="8" data-finger="6">8</div>
+      <div class="key" data-key="9" data-finger="7">9</div>
+      <div class="key" data-key="0" data-finger="8">0</div>
+      <div class="key" data-key="-" data-finger="8">-</div>
+      <div class="key" data-key="=" data-finger="8">=</div>
+      <div class="key key-back" data-key="Backspace" data-finger="8">⌫</div>
+    </div>
+    <!-- Fila QWERTY -->
+    <div class="row">
+      <div class="key key-tab" data-key="Tab" data-finger="1">Tab</div>
+      <div class="key" data-key="q" data-finger="1">Q</div>
+      <div class="key" data-key="w" data-finger="2">W</div>
+      <div class="key" data-key="e" data-finger="3">E</div>
+      <div class="key" data-key="r" data-finger="4">R</div>
+      <div class="key" data-key="t" data-finger="4">T</div>
+      <div class="key" data-key="y" data-finger="5">Y</div>
+      <div class="key" data-key="u" data-finger="5">U</div>
+      <div class="key" data-key="i" data-finger="6">I</div>
+      <div class="key" data-key="o" data-finger="7">O</div>
+      <div class="key" data-key="p" data-finger="8">P</div>
+      <div class="key" data-key="[" data-finger="8">[</div>
+      <div class="key" data-key="]" data-finger="8">]</div>
+      <div class="key" data-key="\" data-finger="8">\</div>
+    </div>
+    <!-- Fila ASDF -->
+    <div class="row">
+      <div class="key key-caps" data-key="CapsLock" data-finger="1">Caps</div>
+      <div class="key" data-key="a" data-finger="1">A</div>
+      <div class="key" data-key="s" data-finger="2">S</div>
+      <div class="key" data-key="d" data-finger="3">D</div>
+      <div class="key home" data-key="f" data-finger="4">F</div>
+      <div class="key" data-key="g" data-finger="4">G</div>
+      <div class="key" data-key="h" data-finger="5">H</div>
+      <div class="key home" data-key="j" data-finger="5">J</div>
+      <div class="key" data-key="k" data-finger="6">K</div>
+      <div class="key" data-key="l" data-finger="7">L</div>
+      <div class="key" data-key=";" data-finger="8">;</div>
+      <div class="key" data-key="'" data-finger="8">'</div>
+      <div class="key key-enter" data-key="Enter" data-finger="8">Enter</div>
+    </div>
+    <!-- Fila ZXCV -->
+    <div class="row">
+      <div class="key key-shift" data-key="Shift" data-finger="1">Shift</div>
+      <div class="key" data-key="z" data-finger="1">Z</div>
+      <div class="key" data-key="x" data-finger="2">X</div>
+      <div class="key" data-key="c" data-finger="3">C</div>
+      <div class="key" data-key="v" data-finger="4">V</div>
+      <div class="key" data-key="b" data-finger="4">B</div>
+      <div class="key" data-key="n" data-finger="5">N</div>
+      <div class="key" data-key="m" data-finger="5">M</div>
+      <div class="key" data-key="," data-finger="6">,</div>
+      <div class="key" data-key="." data-finger="7">.</div>
+      <div class="key" data-key="/" data-finger="8">/</div>
+      <div class="key key-shift" data-key="Shift" data-finger="8">Shift</div>
+    </div>
+    <!-- Fila inferior -->
+    <div class="row">
+      <div class="key key-ctrl" data-key="Control" data-finger="1">Ctrl</div>
+      <div class="key key-ctrl" data-key="Alt" data-finger="1">Alt</div>
+      <div class="key key-ctrl" data-key="Meta" data-finger="1">Cmd</div>
+      <div class="key key-space" data-key=" " data-finger="0">Space</div>
+      <div class="key key-ctrl" data-key="Meta" data-finger="8">Cmd</div>
+      <div class="key key-ctrl" data-key="Alt" data-finger="8">Alt</div>
+      <div class="key key-ctrl" data-key="Control" data-finger="8">Ctrl</div>
+    </div>
+  </div>
+
+  <div class="info" id="info">${defaultInfo}</div>
+
+  <script nonce="${nonce}">
+    (function() {
+      var api = acquireVsCodeApi();
+      var allKeys = document.querySelectorAll('.key');
+
+      // Recibir mensajes de la extensión
+      window.addEventListener('message', function(event) {
+        var msg = event.data;
+        if (msg.command === 'highlight') {
+          highlightKey(msg.key, msg.description);
+        }
+      });
+
+      // Resaltar una tecla con efecto visual
+      function highlightKey(key, description) {
+        // Limpiar resaltados previos
+        allKeys.forEach(function(el) { el.classList.remove('highlight'); });
+
+        // Buscar la tecla correspondiente (case-insensitive)
+        var target = document.querySelector('[data-key="' + key.toLowerCase() + '"]');
+        if (!target) {
+          target = document.querySelector('[data-key="' + key + '"]');
+        }
+
+        if (target) {
+          target.classList.add('highlight');
+          // Quitar resaltado tras 1.5 segundos
+          setTimeout(function() {
+            target.classList.remove('highlight');
+          }, 1500);
+        }
+
+        // Mostrar información del atajo
+        var info = document.getElementById('info');
+        if (description && info) {
+          info.innerHTML = '<span class="shortcut-name">' + key + '</span> — ' + description;
+        }
+      }
+
+      // Notificar al panel host cuando se presiona una tecla
+      document.addEventListener('keydown', function(e) {
+        api.postMessage({ command: 'keypress', key: e.key, code: e.code });
+      });
+    })();
+  </script>
+</body>
+</html>
