@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { logger } from './utils/logger';
 import * as config from './utils/config';
+import * as sound from './utils/sound';
 import * as statusBar from './ui/statusBar';
 import * as mouseGuard from './core/mouseGuard';
 import { shortcuts, getShortcutForPlatform, getDescription } from './data/shortcuts';
@@ -17,7 +18,10 @@ export function activate(context: vscode.ExtensionContext): void {
   // 2. Inicializar módulo de configuración
   config.activate(context);
 
-  // 3. Inicializar barra de estado
+  // 3. Inicializar sonido con la ruta de la extensión
+  sound.init(context.extensionPath);
+
+  // 4. Inicializar barra de estado
   statusBar.activate(context);
 
   // 4. Inicializar MouseGuard

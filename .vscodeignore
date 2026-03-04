@@ -4,6 +4,7 @@ out/
 src/
 test/
 !dist/extension.js
+!media/**
 .gitignore
 .vscode/
 tsconfig.json

@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { getConfig, onConfigChanged } from '../utils/config';
 import { showShortcutNotification } from '../ui/notifier';
+import { showBlocker } from '../ui/blockerPanel';
+import { playSoft, playAlert } from '../utils/sound';
 import { logger } from '../utils/logger';
 import {
   findShortcutByCommand,
@@ -48,11 +50,10 @@ export function deactivate(): void {
 
 /**
  * Maneja un evento de cambio de selección.
- * Detecta clics de ratón y muestra sugerencia de atajo.
- *
- * NOTA CRÍTICA: event.kind puede ser undefined en muchas versiones de VS Code
- * y en forks como Cursor/Windsurf. Solo descartamos Keyboard y Command
- * explícitos. Undefined y Mouse se tratan como posible clic de ratón.
+ * Detecta clics de ratón y responde según el modo activo:
+ *   - soft: notificación + sonido suave
+ *   - strict: WebView bloqueante + sonido alerta
+ *   - training: WebView bloqueante + sonido alerta (igual que strict por ahora)
  */
 function handleSelectionChange(
   event: vscode.TextEditorSelectionChangeEvent,
@@ -76,19 +77,32 @@ function handleSelectionChange(
   }
   lastNotificationTime = now;
 
-  logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'})`);
+  logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'}, mode=${config.mode})`);
 
-  // Para la Fase 1 mostramos atajos de navegación sugeridos
+  // Elegir un atajo para mostrar
   const navigationShortcuts = [
     findShortcutByCommand('workbench.action.gotoLine'),
     findShortcutByCommand('workbench.action.quickOpen'),
     findShortcutByCommand('actions.find'),
   ].filter((s): s is NonNullable<typeof s> => s !== undefined);
 
-  // Elegimos uno de los atajos de navegación o uno aleatorio
   const shortcut = navigationShortcuts.length > 0
     ? navigationShortcuts[Math.floor(Math.random() * navigationShortcuts.length)]
     : getRandomShortcut();
 
-  showShortcutNotification(shortcut);
+  // Responder según el modo
+  switch (config.mode) {
+    case 'soft':
+      showShortcutNotification(shortcut);
+      if (config.soundEnabled) {
+        playSoft();
+      }
+      break;
+
+    case 'strict':
+    case 'training':
+      showBlocker(shortcut);
+      playAlert(); // Siempre suena en modo estricto/training
+      break;
+  }
 }
