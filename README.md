@@ -186,7 +186,16 @@ Grazie di cuore per usare KeyMaster.
 
 </details>
 
-## 💖 Apoya el proyecto
+## � Comparte
+
+Si te gusta KeyMaster, ayuda a que más gente lo conozca:
+
+[![Compartir en Twitter](https://img.shields.io/badge/Twitter-Compartir-1DA1F2?logo=twitter&logoColor=white)](https://twitter.com/intent/tweet?text=Domina%20el%20teclado%2C%20olvida%20el%20rat%C3%B3n.%20Extensi%C3%B3n%20de%20entrenamiento%20de%20atajos%20para%20VS%20Code.&url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master&via=erbolamm)
+[![Compartir en LinkedIn](https://img.shields.io/badge/LinkedIn-Compartir-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master)
+[![Compartir en Reddit](https://img.shields.io/badge/Reddit-Compartir-FF4500?logo=reddit&logoColor=white)](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master&title=KeyMaster%20%E2%80%94%20Domina%20el%20teclado%20en%20VS%20Code)
+[![Compartir en WhatsApp](https://img.shields.io/badge/WhatsApp-Compartir-25D366?logo=whatsapp&logoColor=white)](https://api.whatsapp.com/send?text=KeyMaster%20%E2%80%94%20Domina%20el%20teclado%20en%20VS%20Code%2C%20Cursor%20y%20Windsurf.%20https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master)
+
+## �💖 Apoya el proyecto
 
 Herramienta gratuita y open source. Si te ahorra tiempo, un café ayuda a mantener el desarrollo.
 
