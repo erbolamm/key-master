@@ -25,7 +25,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=apliarte.keymaster">VS Marketplace</a> · 
   <a href="https://open-vsx.org/extension/apliarte/keymaster">Open VSX (Cursor/Windsurf/Antigravity)</a> · 
   <a href="https://github.com/erbolamm/key-master">GitHub</a>
-  <a href=" https://discord.gg/GF7FK3fmzu">Discord</a>
+  <a href="https://discord.gg/GF7FK3fmzu">Discord</a>
 </p>
 
 ---
