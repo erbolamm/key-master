@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] - 2026-03-08
+
+### Cambiado
+- Bump de versión para publicación en Marketplace bajo publisher `apliarte`
+
 ## [0.2.0] - 2026-03-04
 
 ### Added

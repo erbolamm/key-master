@@ -6,6 +6,7 @@ import * as statusBar from './ui/statusBar';
 import * as mouseGuard from './core/mouseGuard';
 import * as commandInterceptor from './core/commandInterceptor';
 import * as sessionStats from './core/sessionStats';
+import * as fullScreenOverlay from './ui/fullScreenOverlay';
 import { openPanel as openKeyboardPanel } from './ui/keyboardPanel/keyboardPanel';
 import { shortcuts, getShortcutForPlatform, getDescription } from './data/shortcuts';
 
@@ -26,7 +27,13 @@ export function activate(context: vscode.ExtensionContext): void {
   commandInterceptor.activate(context);
   sessionStats.activate(context);
 
-  // 3. Registrar comandos
+  // 3. Activar overlay si está en modo strict/training
+  const cfg = config.getConfig();
+  if (cfg.enabled && cfg.mode !== 'soft') {
+    fullScreenOverlay.activateFullScreenOverlay();
+  }
+
+  // 4. Registrar comandos
   registerCommands(context);
 
   // 4. Confirmación visual de activación
@@ -37,6 +44,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
 /** VS Code llama a esta función cuando la extensión se desactiva */
 export function deactivate(): void {
+  fullScreenOverlay.deactivateFullScreenOverlay();
   commandInterceptor.deactivate();
   mouseGuard.deactivate();
   sessionStats.deactivate();
@@ -159,6 +167,14 @@ async function handleToggleEnabled(): Promise<void> {
   const newEnabled = !current.enabled;
   await config.setConfigValue('enabled', newEnabled);
   statusBar.refresh();
+  
+  // Activar/desactivar overlay según el nuevo estado
+  if (newEnabled && current.mode !== 'soft') {
+    fullScreenOverlay.activateFullScreenOverlay();
+  } else {
+    fullScreenOverlay.deactivateFullScreenOverlay();
+  }
+  
   const msg = newEnabled
     ? (isES ? 'KeyMaster activado ✅' : 'KeyMaster enabled ✅')
     : (isES ? 'KeyMaster desactivado ⏸️' : 'KeyMaster disabled ⏸️');
@@ -201,6 +217,15 @@ async function handleChangeMode(): Promise<void> {
   if (newMode) {
     await config.setConfigValue('mode', newMode);
     statusBar.refresh();
+    
+    // Activar/desactivar overlay según el nuevo modo
+    const current = config.getConfig();
+    if (current.enabled && newMode !== 'soft') {
+      fullScreenOverlay.activateFullScreenOverlay();
+    } else {
+      fullScreenOverlay.deactivateFullScreenOverlay();
+    }
+    
     logger.info(`Modo cambiado a: ${newMode}`);
   }
 }

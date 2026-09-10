@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ApliArte - Extensiones de VS Code para desarrolladores: KeyMaster para aprender atajos de teclado y Corrector para mejorar tu escritura en español">
+    <title>ApliArte — Extensiones de VS Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Principal */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #7c3aed 100%);
+            border-radius: 20px;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px;
+            color: white;
+            margin-bottom: 40px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .header-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0px 0px 15px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            margin: auto;
+            max-width: 600px;
+            opacity: 0.9;
+        }
+        
+        .header-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: white;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 8px 20px;
+        }
+        
+        /* Extensiones Grid */
+        .extensions-grid {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .extension-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .extension-card:hover {
+            transform: translateY(-4px);
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 8px 24px;
+        }
+        
+        .extension-header {
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .extension-header.corrector {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        }
+        
+        .extension-header.keymaster {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .extension-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .extension-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .extension-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .extension-content {
+            padding: 30px;
+        }
+        
+        .extension-description {
+            color: #334155;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .features-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .corrector .feature-item {
+            border-left-color: #7c3aed;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 14px;
+            color: #475569;
+        }
+        
+        .feature-text strong {
+            display: block;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .extension-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: rgba(102, 126, 234, 0.3) 0px 4px 12px;
+        }
+        
+        .corrector .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            box-shadow: rgba(124, 58, 237, 0.3) 0px 4px 12px;
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+        
+        /* Soporte Section */
+        .support-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+        }
+        
+        .support-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #1e293b;
+        }
+        
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .support-item {
+            text-align: center;
+            padding: 25px 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            transition: background 0.2s;
+        }
+        
+        .support-item:hover {
+            background: #f1f5f9;
+        }
+        
+        .support-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .support-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        
+        .support-item p {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .support-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1e1e2e;
+            border-radius: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            width: 80px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+        
+        .footer h3 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .support-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .support-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .support-btn.paypal { background: #003087; }
+        .support-btn.kofi { background: #ff5e5b; }
+        .support-btn.github { background: #24292e; }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .extension-header h2 {
+                font-size: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-icon">🎨</div>
+            <h1>ApliArte</h1>
+            <p>Extensiones de VS Code diseñadas para mejorar tu flujo de trabajo. Desde aprender atajos de teclado hasta corregir tu escritura en español.</p>
+            <div class="header-tag">100% Gratuito · Open Source · Para Todos</div>
+        </header>
+
+        <!-- Extensiones -->
+        <div class="extensions-grid">
+            <!-- KeyMaster -->
+            <article class="extension-card">
+                <div class="extension-header keymaster">
+                    <div class="extension-icon">⌨️</div>
+                    <h2>KeyMaster</h2>
+                    <p>Entrenador de atajos de teclado. Aprende a usar VS Code, Cursor y Windsurf sin depender del ratón.</p>
+                </div>
+                <div class="extension-content">
+                    <p class="extension-description">
+                        Cada vez que haces clic con el ratón en el editor, KeyMaster te muestra una notificación con el atajo de teclado equivalente. Tres modos de entrenamiento: Soft (avisa), Strict (bloquea), y Training (teclado visual).
+                    </p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">🖱️</span>
+                            <span class="feature-text">
+                                <strong>Detección en tiempo real</strong>
+                                Identifica clics de ratón y sugiere atajos al instante
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📖</span>
+                            <span class="feature-text">
+                                <strong>42 atajos incluidos</strong>
+                                Navegación, edición, búsqueda, terminal, Git...
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🌍</span>
+                            <span class="feature-text">
+                                <strong>Bilingüe ES/EN</strong>
+                                Todas las notificaciones en español e inglés
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span class="feature-text">
+                                <strong>Estadísticas de progreso</strong>
+                                Clics evitados, racha diaria, atajos más usados
+                            </span>
+                        </div>
+                    </div>
+                    <div class="extension-links">
+                        <a href="https://marketplace.visualstudio.com/items?itemName=apliarte.keymaster" class="btn btn-primary" target="_blank">
+                            📦 Ver en Marketplace
+                        </a>
+                        <a href="https://github.com/erbolamm/key-master" class="btn btn-secondary" target="_blank">
+                            ⭐ GitHub
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Corrector -->
+            <article class="extension-card corrector">
+                <div class="extension-header corrector">
+                    <div class="extension-icon">🔤</div>
+                    <h2>Corrector</h2>
+                    <p>Asistente de escritura para Copilot Chat. Corrige ortografía en español 100% offline, diseñado para dislexia.</p>
+                </div>
+                <div class="extension-content">
+                    <p class="extension-description">
+                        Escribe @corrector seguido de tu texto en el chat de Copilot y verás las correcciones aplicadas automáticamente. 150+ reglas de español, diccionario personal, y modo IA opcional.
+                    </p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">🔤</span>
+                            <span class="feature-text">
+                                <strong>150+ reglas de español</strong>
+                                B/V, H omitida, C/S/Z, tildes, abreviaturas de chat
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✈️</span>
+                            <span class="feature-text">
+                                <strong>100% Offline</strong>
+                                Sin APIs externas, tus datos nunca salen de tu máquina
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📖</span>
+                            <span class="feature-text">
+                                <strong>Diccionario personal</strong>
+                                Añade tus propias palabras y reglas personalizadas
+                            </span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">♿</span>
+                            <span class="feature-text">
+                                <strong>Diseñado para dislexia</strong>
+                                Pensado desde cero para dificultades de escritura
+                            </span>
+                        </div>
+                    </div>
+                    <div class="extension-links">
+                        <a href="https://marketplace.visualstudio.com/items?itemName=apliarte.corrector-espanol" class="btn btn-primary" target="_blank">
+                            📦 Ver en Marketplace
+                        </a>
+                        <a href="https://github.com/erbolamm/corrector-vscode" class="btn btn-secondary" target="_blank">
+                            ⭐ GitHub
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Soporte -->
+        <section class="support-section">
+            <h2>🤝 Soporte y Contacto</h2>
+            <div class="support-grid">
+                <div class="support-item">
+                    <div class="support-icon">🐛</div>
+                    <h3>Reportar Bug</h3>
+                    <p>¿Encontraste un problema?<br><a href="https://github.com/erbolamm/key-master/issues" target="_blank">KeyMaster Issues</a> · <a href="https://github.com/erbolamm/corrector-vscode/issues" target="_blank">Corrector Issues</a></p>
+                </div>
+                <div class="support-item">
+                    <div class="support-icon">💡</div>
+                    <h3>Sugerencias</h3>
+                    <p>¿Tienes una idea?<br><a href="https://github.com/erbolamm/key-master/discussions" target="_blank">Discussions</a> · <a href="https://github.com/erbolamm/corrector-vscode/discussions" target="_blank">Discussions</a></p>
+                </div>
+                <div class="support-item">
+                    <div class="support-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>Contacto directo<br><a href="mailto:erbolamm@gmail.com">erbolamm@gmail.com</a></p>
+                </div>
+                <div class="support-item">
+                    <div class="support-icon">⭐</div>
+                    <h3>Valorar</h3>
+                    <p>¿Te gustan las extensiones?<br><a href="https://marketplace.visualstudio.com/publishers/apliarte" target="_blank">Deja una reseña</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhzf6NXXt-CylHi5Ws-jAuLmbYazaeE5cPHraKk-mKi1L9QXCqNqvqz74JewDIlmGWQuqNyct5PtttawjSOcSj2RRWDldiPBmJ7s44zEbGqyjv-PpqXrh040Rklah9jWr_EF1AymH2VJ0E1plGS7YfP5lpjRZj8lXnopxWJjghCJsmVhWsfFrp4Z2e9xWk/s320/aplikt.png" alt="ApliArte" class="footer-logo">
+            <h3>ApliArte</h3>
+            <p>Extensiones de VS Code creadas con pasión para la comunidad de desarrolladores.</p>
+            
+            <div class="footer-links">
+                <a href="https://marketplace.visualstudio.com/publishers/apliarte" target="_blank">Marketplace</a>
+                <a href="https://github.com/erbolamm" target="_blank">GitHub</a>
+                <a href="https://apliarte-click-pro-2026.web.app/" target="_blank">Web</a>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://github.com/erbolamm" target="_blank" class="social-link">🐙 GitHub</a>
+                <a href="https://twitter.com/intent/tweet?text=%F0%9F%8E%A8%20ApliArte%20-%20Extensiones%20de%20VS%20Code%20gratuitas%20para%20desarrolladores" target="_blank" class="social-link">🐦 Twitter</a>
+            </div>
+            
+            <div class="support-buttons">
+                <a href="https://www.paypal.com/paypalme/erbolamm" target="_blank" class="support-btn paypal">💳 PayPal</a>
+                <a href="https://ko-fi.com/C0C11TWR1K" target="_blank" class="support-btn kofi">☕ Ko-fi</a>
+                <a href="https://github.com/erbolamm" target="_blank" class="support-btn github">⭐ GitHub</a>
+            </div>
+            
+            <p style="margin-top: 25px; font-size: 12px;">
+                © 2026 ApliArte · Hecho con pasión por Javier Mateo · <a href="https://github.com/erbolamm" style="color: #c4b5fd;">Open Source</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

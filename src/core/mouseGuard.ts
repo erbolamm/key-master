@@ -15,7 +15,7 @@ let selectionListener: vscode.Disposable | undefined;
 let configListener: vscode.Disposable | undefined;
 // Control de frecuencia para evitar spam de notificaciones
 let lastNotificationTime = 0;
-const NOTIFICATION_COOLDOWN_MS = 3000;
+const NOTIFICATION_COOLDOWN_MS = 500; // Reducido de 3000 a 500ms
 // Índice rotatorio para no repetir atajos consecutivos
 let lastShortcutIndex = -1;
 
@@ -62,26 +62,49 @@ export function deactivate(): void {
 function handleSelectionChange(
   event: vscode.TextEditorSelectionChangeEvent,
 ): void {
-  // Descartar cambios explícitos de teclado o comandos programáticos
+  // DEBUG: Log todo lo que llega
+  const config = getConfig();
+  logger.info(`🐛 DEBUG: handleSelectionChange - kind=${event.kind}, enabled=${config.enabled}, mode=${config.mode}`);
+  
+  // Solo ignorar cambios EXPLÍCITOS de teclado o comandos
+  // En Windsurf, event.kind puede ser undefined para clics de ratón
   if (event.kind === vscode.TextEditorSelectionChangeKind.Keyboard ||
       event.kind === vscode.TextEditorSelectionChangeKind.Command) {
+    logger.info(`🐛 DEBUG: Ignorando - tipo Keyboard o Command`);
     return;
   }
 
-  const config = getConfig();
   if (!config.enabled) {
+    logger.info(`🐛 DEBUG: Ignorando - KeyMaster desactivado`);
     return;
   }
 
-  // Control de frecuencia para no spamear notificaciones
+  // Modo estricto/training: detectar CUALQUIER cambio de selección como potencial clic de ratón
+  // Incluyendo cuando event.kind es undefined
+  if (config.mode === 'strict' || config.mode === 'training') {
+    const now = Date.now();
+    if (now - lastNotificationTime < NOTIFICATION_COOLDOWN_MS) {
+      logger.info(`🐛 DEBUG: Cooldown activo, pero en modo strict detectamos de todos modos`);
+      // En modo strict, no retornamos - seguimos procesando
+    } else {
+      lastNotificationTime = now;
+    }
+    
+    logger.info(`🐛 DEBUG: 🖱️ CLIC DE RATÓN DETECTADO (kind=${event.kind ?? 'undefined'}) - modo=${config.mode}`);
+    const shortcut = trackAndPickShortcut(config);
+    respondToClick(config, shortcut);
+    return;
+  }
+
+  // Modo soft: cooldown normal
   const now = Date.now();
   if (now - lastNotificationTime < NOTIFICATION_COOLDOWN_MS) {
+    logger.info(`🐛 DEBUG: Ignorando - cooldown activo (${now - lastNotificationTime}ms)`);
     return;
   }
   lastNotificationTime = now;
 
-  logger.info(`MouseGuard: selección detectada (kind=${event.kind ?? 'undefined'}, mode=${config.mode})`);
-
+  logger.info(`🐛 DEBUG: CLIC DETECTADO (modo soft)`);
   const shortcut = trackAndPickShortcut(config);
   respondToClick(config, shortcut);
 }
