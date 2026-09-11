@@ -9,6 +9,7 @@ import * as sessionStats from './core/sessionStats';
 import * as fullScreenOverlay from './ui/fullScreenOverlay';
 import { openPanel as openKeyboardPanel } from './ui/keyboardPanel/keyboardPanel';
 import { shortcuts, getShortcutForPlatform, getDescription } from './data/shortcuts';
+import { activateShortcutsPanel } from './ui/shortcutsPanel/shortcutsPanel';
 
 /**
  * Punto de entrada de la extensión.
@@ -32,6 +33,9 @@ export function activate(context: vscode.ExtensionContext): void {
   if (cfg.enabled && cfg.mode !== 'soft') {
     fullScreenOverlay.activateFullScreenOverlay();
   }
+
+  // 3-bis. Activar panel de atajos (sidebar)
+  activateShortcutsPanel(context);
 
   // 4. Registrar comandos
   registerCommands(context);

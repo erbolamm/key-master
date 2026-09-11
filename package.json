@@ -129,21 +129,44 @@
       {
         "command": "keymaster.showShortcutRef",
         "title": "KeyMaster: Referencia de atajos"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "keymaster.toggle",
-        "key": "ctrl+shift+k",
-        "mac": "cmd+shift+k"
       },
       {
-        "command": "keymaster.openKeyboard",
-        "key": "ctrl+shift+j",
-        "mac": "cmd+shift+j"
+        "command": "keymaster.openShortcuts",
+        "title": "KeyMaster: Abrir panel de atajos"
       }
-    ]
-  },
+    ],
+        "keybindings": [
+          {
+            "command": "keymaster.toggle",
+            "key": "ctrl+shift+k",
+            "mac": "cmd+shift+k"
+          },
+          {
+            "command": "keymaster.openKeyboard",
+            "key": "ctrl+shift+j",
+            "mac": "cmd+shift+j"
+          }
+        ],
+        "viewsContainers": {
+          "panel": [
+            {
+              "id": "keymaster.shortcuts",
+              "title": "Atajos",
+              "icon": "media/icon.svg"
+            }
+          ]
+        },
+        "views": {
+          "panel": [
+            {
+              "type": "webview",
+              "id": "keymaster.shortcuts",
+              "name": "Atajos",
+              "when": "keymaster:enabled"
+            }
+          ]
+        }
+      },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && node esbuild.js",
