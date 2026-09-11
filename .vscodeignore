@@ -12,8 +12,13 @@ tsconfig.json
 tsconfig.test.json
 esbuild.js
 icon.svg
+# `icon-new.png` es el maestro de 640x640: solo sirve para rehacer `icon.png`.
+# Se queda fuera del paquete; si no, viaja en cada descarga sin aportar nada.
+icon-new.png
 **/*.map
 **/*.ts
 KeyMaster_Guia_Tecnica.txt
 KeyMaster_Guia_Tecnica.docx
 blogger-post.html
+entregas/**
+*.vsix
