@@ -20,7 +20,7 @@ export function activateShortcutsPanel(context: vscode.ExtensionContext): void {
 
   // Command to open it manually
   const cmd = vscode.commands.registerCommand('keymaster.openShortcuts', () => {
-    vscode.commands.executeCommand('keymaster.shortcuts.focus');
+    vscode.commands.executeCommand('keymasterShortcuts.focus');
   });
   context.subscriptions.push(cmd);
 

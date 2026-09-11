@@ -150,7 +150,7 @@
         "viewsContainers": {
           "panel": [
             {
-              "id": "keymaster.shortcuts",
+              "id": "keymasterShortcuts",
               "title": "Atajos",
               "icon": "media/icon.svg"
             }
@@ -160,7 +160,7 @@
           "panel": [
             {
               "type": "webview",
-              "id": "keymaster.shortcuts",
+              "id": "keymasterShortcuts",
               "name": "Atajos",
               "when": "keymaster:enabled"
             }
