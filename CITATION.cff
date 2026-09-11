@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "KeyMaster"
+version: "1.0.0"
+date-released: "2026-09-11"
+url: "https://github.com/erbolamm/key-master"
+repository-code: "https://github.com/erbolamm/key-master"
+license: MIT
+authors:
+  - family-names: Mateo
+    given-names: Javier
+    affiliation: "ApliArte"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+keywords:
+  - vscode
+  - vscode-extension
+  - keyboard
+  - shortcuts
+  - training
+abstract: >-
+  KeyMaster es una extensión de VS Code que muestra atajos de teclado,
+  detecta el uso del ratón y guía a los desarrolladores a usar el teclado
+  para mejorar su productividad y ergonomía.

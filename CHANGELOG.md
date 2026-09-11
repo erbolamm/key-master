@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0] - 2026-09-11
+
+### Añadido
+- **Panel de atajos en barra lateral**: referencia completa de 44 atajos de VS Code
+organizados en 7 categorías (navegación, edición, terminal, búsqueda, barra lateral,
+general, git) con búsqueda en tiempo real, filtro por categoría y botón de copiar
+al portapapeles
+- Tema claro/oscuro automático y soporte reduced-motion
+
+### Cambiado
+- **Versión 1.0.0**: primera versión con autoría canónica completa
+(MIT, README con autor, CODEOWNERS, FUNDING.yml, CITATION.cff)
+
 ## [0.2.1] - 2026-03-08
 
 ### Cambiado
