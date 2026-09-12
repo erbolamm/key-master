@@ -103,89 +103,9 @@ Cuando haces clic con el ratón en el editor, KeyMaster te muestra el atajo de t
 
 Javier Mateo (ApliArte) — [github.com/erbolamm](https://github.com/erbolamm)
 
-## 💬 Una nota personal del autor / A personal note from the author
+### 💬 Una nota personal del autor / A personal note from the author
 
-> ℹ️ Nota: El texto siguiente es un mensaje personal del autor, escrito en varios idiomas para que pueda leerlo gente de todo el mundo. Esto no implica que el proyecto tenga soporte funcional completo en esos idiomas.
-
-> ℹ️ Note: The text below is a personal message from the author, written in several languages so people around the world can read it. This does not imply full multilingual feature support in those languages.
-
-<details>
-<summary>🇪🇸 Español</summary>
-
-Soy desarrollador indie, autodidacta, aprendí todo desde cero a base de esfuerzo. Tengo TDAH y siempre me costó usar atajos de teclado — mi cerebro prefería el ratón porque era lo "fácil". KeyMaster nació para obligarme a mí mismo a mejorar.
-
-Cuando vi que funcionaba, pensé: ¿por qué guardarlo solo para mí? Así que lo compartí. Si te ayuda a dejar el ratón y ser más productivo, me alegro.
-
-Si te resulta útil, agradecería una ⭐ en GitHub y 5 estrellas en el Marketplace. Y si podés, una pequeña donación ayuda — soy padre de dos niños y cada euro cuenta.
-
-Gracias de corazón por usar KeyMaster.
-
-</details>
-
-<details>
-<summary>🇬🇧 English</summary>
-
-I'm an indie developer, self-taught, who learned everything from scratch through effort. I have ADHD and always struggled with keyboard shortcuts — my brain preferred the mouse because it was "easy". KeyMaster was born to force myself to improve.
-
-When I saw it worked, I thought: why keep it just for myself? So I shared it. If it helps you ditch the mouse and be more productive, I'm glad.
-
-If it helps you, I'd really appreciate a ⭐ on GitHub and 5 stars on the Marketplace. And if you can, a small donation would help enormously — I'm a father of two kids and every euro counts.
-
-Thank you from the bottom of my heart for using KeyMaster.
-
-</details>
-
-<details>
-<summary>🇧🇷 Português</summary>
-
-Sou um desenvolvedor indie, autodidata, que aprendeu tudo do zero com muito esforço. Tenho TDAH e sempre tive dificuldade com atalhos de teclado — meu cérebro preferia o mouse porque era o "fácil". KeyMaster nasceu para me forçar a melhorar.
-
-Quando vi que funcionava, pensei: por que guardar só para mim? Então compartilhei. Se te ajuda a largar o mouse e ser mais produtivo, fico feliz.
-
-Se te for útil, agradeceria uma ⭐ no GitHub e 5 estrelas no Marketplace. E se puder, uma pequena doação ajudaria muito — sou pai de duas crianças e cada euro conta.
-
-Obrigado de coração por usar o KeyMaster.
-
-</details>
-
-<details>
-<summary>🇫🇷 Français</summary>
-
-Je suis développeur indie, autodidacte, j'ai tout appris par moi-même. J'ai un TDAH et j'ai toujours eu du mal avec les raccourcis clavier — mon cerveau préférait la souris parce que c'était "facile". KeyMaster est né pour me forcer à m'améliorer.
-
-Quand j'ai vu que ça marchait, je me suis dit : pourquoi le garder pour moi seul ? Alors je l'ai partagé. Si ça t'aide à lâcher la souris et être plus productif, j'en suis content.
-
-Si ça t'est utile, je serais reconnaissant pour une ⭐ sur GitHub et 5 étoiles sur le Marketplace. Et si tu peux, un petit don aiderait beaucoup — je suis père de deux enfants.
-
-Merci du fond du cœur d'utiliser KeyMaster.
-
-</details>
-
-<details>
-<summary>🇩🇪 Deutsch</summary>
-
-Ich bin Indie-Entwickler, Autodidakt, habe alles von Grund auf gelernt. Ich habe ADHS und hatte immer Probleme mit Tastenkombinationen — mein Gehirn bevorzugte die Maus, weil es "einfacher" war. KeyMaster entstand, um mich selbst zu zwingen, besser zu werden.
-
-Als es funktionierte, dachte ich: Warum nur für mich behalten? Also habe ich es geteilt. Wenn es dir hilft, die Maus loszulassen und produktiver zu sein, freut mich das.
-
-Wenn es dir hilft, würde ich mich über einen ⭐ auf GitHub und 5 Sterne im Marketplace freuen. Und wenn du kannst, würde eine kleine Spende sehr helfen — ich bin Vater von zwei Kindern.
-
-Danke von Herzen, dass du KeyMaster benutzt.
-
-</details>
-
-<details>
-<summary>🇮🇹 Italiano</summary>
-
-Sono uno sviluppatore indie, autodidatta, ho imparato tutto da zero. Ho l'ADHD e ho sempre fatto fatica con le scorciatoie da tastiera — il mio cervello preferiva il mouse perché era "facile". KeyMaster è nato per costringermi a migliorare.
-
-Quando ho visto che funzionava, ho pensato: perché tenerlo solo per me? Così l'ho condiviso. Se ti aiuta a lasciare il mouse e essere più produttivo, ne sono contento.
-
-Se ti è utile, apprezzerei una ⭐ su GitHub e 5 stelle sul Marketplace. E se puoi, una piccola donazione aiuterebbe molto — sono padre di due bambini.
-
-Grazie di cuore per usare KeyMaster.
-
-</details>
+Se movió a la landing: [erbolamm.github.io/key-master](https://erbolamm.github.io/key-master/#author), escrita en 6 idiomas.
 
 ## � Comparte
 
@@ -206,7 +126,7 @@ Herramienta gratuita y open source. Si te ahorra tiempo, un café ayuda a manten
 | Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
 | Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
 
-🌐 [Sitio oficial](https://apliarte-click-pro-2026.web.app/) · 📦 [GitHub](https://github.com/erbolamm/key-master)
+🌐 [Landing](https://erbolamm.github.io/key-master/) · 📦 [GitHub](https://github.com/erbolamm/key-master)
 
 ## Licencia
 

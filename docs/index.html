@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KeyMaster — Entrena atajos de teclado en VS Code, Cursor y Windsurf</title>
+  <meta name="description" content="Extensión que detecta tus clics de ratón en el editor y te muestra el atajo de teclado que deberías usar. 3 modos, 42 atajos, teclado visual QWERTY y estadísticas de progreso." />
+  <meta property="og:title" content="KeyMaster — Domina el teclado, olvida el ratón" />
+  <meta property="og:description" content="Entrenamiento de atajos de teclado para VS Code, Cursor y Windsurf. Detecta clics de ratón y enseña el atajo equivalente." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://erbolamm.github.io/key-master/" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/erbolamm/key-master/main/icon.png" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('apliarte_theme');
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+      } catch (e) { /* almacenamiento bloqueado: se queda en modo claro */ }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&family=Fira+Sans+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #005fa9;
+      --primary-dark: #00467b;
+      --accent: #5ecef5;
+      --white: #fdfdfd;
+      --charcoal: #303030;
+      --grey-light: #d9d9d9;
+      --grey-muted: #bebbb9;
+      --warm: #e8955e;
+
+      --bg: #fdfdfd;
+      --surface: #ffffff;
+      --surface-elevated: #f4f8fb;
+      --border: #d9d9d9;
+      --border-accent: rgba(0, 95, 169, 0.25);
+      --text: #303030;
+      --text-muted: #555555;
+      --code-bg: #f0f4f8;
+      --hero-grad: linear-gradient(135deg, #005fa9 0%, #00467b 100%);
+      --shadow: 0 4px 20px rgba(0, 70, 123, 0.08);
+      --badge-bg: rgba(0, 95, 169, 0.08);
+      --badge-text: #005fa9;
+    }
+
+    [data-theme="dark"] {
+      --bg: #303030;
+      --surface: #00467b;
+      --surface-elevated: #003660;
+      --border: rgba(94, 206, 245, 0.25);
+      --border-accent: rgba(94, 206, 245, 0.4);
+      --text: #fdfdfd;
+      --text-muted: #bebbb9;
+      --code-bg: #1f2226;
+      --hero-grad: linear-gradient(135deg, #5ecef5 0%, #8fd5fa 100%);
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+      --badge-bg: rgba(94, 206, 245, 0.15);
+      --badge-text: #5ecef5;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+
+    body {
+      font-family: 'Abel', system-ui, sans-serif;
+      font-size: 1.1rem;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    h1, h2, h3 { font-family: 'Fira Sans Condensed', sans-serif; letter-spacing: -0.01em; line-height: 1.2; }
+    .ui-text, .btn, .badge, th { font-family: 'Inter', 'DejaVu Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+
+    a { color: var(--primary); text-decoration: none; }
+    [data-theme="dark"] a { color: var(--accent); }
+    a:hover, a:focus-visible { text-decoration: underline; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); }
+    .brand img { width: 32px; height: 32px; border-radius: 6px; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--badge-bg); color: var(--badge-text);
+      font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+    }
+    .theme-toggle {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      width: 38px; height: 38px; cursor: pointer; font-size: 1.1rem;
+    }
+
+    section { padding: 56px 0; }
+    .section-title { font-size: 1.8rem; margin-bottom: 8px; }
+    .section-desc { color: var(--text-muted); margin-bottom: 28px; max-width: 640px; }
+
+    .hero { text-align: center; padding: 64px 0 40px; }
+    .hero h1 { font-size: 2.4rem; margin-bottom: 14px; }
+    .hero p.subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 620px; margin: 0 auto 24px; }
+    .hero-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .cta-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px;
+      border-radius: 8px; font-weight: 600; font-size: 1rem; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--hero-grad); color: #fff; text-decoration: none; box-shadow: 0 0 14px rgba(94, 206, 245, 0.35); }
+    [data-theme="dark"] .btn-primary { color: var(--charcoal); }
+    .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); text-decoration: none; }
+
+    .grid-6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border-accent); border-radius: 12px;
+      padding: 20px; box-shadow: var(--shadow);
+    }
+    .card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .steps { counter-reset: step; list-style: none; margin-bottom: 32px; }
+    .steps li {
+      counter-increment: step; position: relative; padding-left: 44px; margin-bottom: 16px;
+    }
+    .steps li::before {
+      content: counter(step); position: absolute; left: 0; top: 0;
+      width: 30px; height: 30px; border-radius: 50%; background: var(--hero-grad);
+      color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    }
+    details.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; }
+    details.faq-item summary { cursor: pointer; font-weight: 600; }
+
+    pre.cmd { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin-bottom: 12px; font-size: 0.9rem; }
+
+    .support-list, .roadmap-list { display: flex; flex-direction: column; gap: 12px; }
+    .support-item, .roadmap-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    }
+    .plans-note { background: var(--surface-elevated); border: 1px solid var(--border-accent); border-radius: 10px; padding: 18px; color: var(--text-muted); }
+
+    details.author-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
+    details.author-note summary { cursor: pointer; font-weight: 600; }
+
+    .share-badges { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+    .share-badges img { height: 28px; }
+
+    footer { text-align: center; padding: 32px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- ── 1. Header con Badges de Estado y Plataformas ─────────── -->
+  <header>
+    <div class="container header-inner">
+      <span class="brand">
+        <img src="../icon.png" alt="KeyMaster" />
+        KeyMaster
+      </span>
+      <div class="badges ui-text">
+        <span class="badge">🧩 VS Code / Cursor / Windsurf</span>
+        <span class="badge">🖥️ macOS · Windows · Linux</span>
+        <span class="badge">🆓 Gratis</span>
+        <span class="badge">🚫 Sin publicidad</span>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar a modo oscuro o claro" title="Cambiar tema claro/oscuro">🌙</button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- ── 2. Hero con One-Liner y Badge de Confianza ───────────── -->
+    <section class="hero">
+      <div class="container">
+        <h1>Domina el teclado. Olvida el ratón.</h1>
+        <p class="subtitle">
+          Cada vez que haces clic con el ratón en el editor, KeyMaster te muestra el atajo de
+          teclado que deberías haber usado. 42 atajos, teclado visual y estadísticas de progreso.
+        </p>
+        <div class="hero-badges">
+          <span class="badge">v1.0.0</span>
+          <span class="badge">🇪🇸 🇬🇧 Bilingüe</span>
+          <span class="badge">3 modos de entrenamiento</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://marketplace.visualstudio.com/items?itemName=apliarte.keymaster" target="_blank" rel="noopener">Instalar en VS Marketplace</a>
+          <a class="btn btn-secondary" href="https://open-vsx.org/extension/apliarte/keymaster" target="_blank" rel="noopener">Ver en Open VSX</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. Grid de 6 Beneficios Técnicos ──────────────────────── -->
+    <section id="features">
+      <div class="container">
+        <h2 class="section-title">Ingeniería real, sin humo</h2>
+        <p class="section-desc">Lo que hace la extensión, comprobable en el código, no en el marketing.</p>
+        <div class="grid-6">
+          <div class="card">
+            <h3>🖱️ Detección de clics en el editor</h3>
+            <p>Detecta cuándo haces clic con el ratón dentro del editor de código y te notifica el atajo equivalente al instante.</p>
+          </div>
+          <div class="card">
+            <h3>🎚️ 3 modos de entrenamiento</h3>
+            <p>Suave (avisa), Estricto (bloquea la acción del ratón) y Entrenamiento (además abre el teclado visual).</p>
+          </div>
+          <div class="card">
+            <h3>⌨️ 42 atajos incluidos</h3>
+            <p>Navegación, edición, búsqueda, terminal y Git — los que de verdad se usan a diario.</p>
+          </div>
+          <div class="card">
+            <h3>🚫 Interceptor de 20 comandos</h3>
+            <p>En modo estricto, bloquea 20 comandos nativos que sueles ejecutar con el ratón (abrir settings, terminal, cerrar pestaña...) y te enseña el atajo real.</p>
+          </div>
+          <div class="card">
+            <h3>🎹 Teclado visual QWERTY</h3>
+            <p>Con guía de colores por dedo y posición de reposo, para aprender la digitación correcta.</p>
+          </div>
+          <div class="card">
+            <h3>📊 Estadísticas de progreso</h3>
+            <p>Clics de ratón, atajos mostrados, racha diaria y tu top 5 de atajos más usados.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. Cómo funciona 1–6 + Mini FAQ ───────────────────────── -->
+    <section id="how-it-works">
+      <div class="container">
+        <h2 class="section-title">Cómo funciona</h2>
+        <ol class="steps">
+          <li>Instala la extensión.</li>
+          <li>KeyMaster aparece en la barra de estado inferior izquierda.</li>
+          <li>Actívalo con clic en la barra o con <code>Cmd+Shift+K</code> / <code>Ctrl+Shift+K</code>.</li>
+          <li>Cada clic con el ratón en el editor muestra una notificación con el atajo que deberías usar.</li>
+          <li>En modo estricto, además se bloquean 20 comandos nativos que sueles ejecutar con el ratón.</li>
+          <li>Abre <code>Ctrl+Shift+J</code> / <code>Cmd+Shift+J</code> para practicar en el teclado visual.</li>
+        </ol>
+
+        <details class="faq-item">
+          <summary>¿Bloquea el ratón por completo?</summary>
+          <p>No. Solo en modo Estricto o Entrenamiento bloquea la acción concreta que intentaste hacer con el ratón, y solo para los 20 comandos interceptados.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Funciona en Cursor y Windsurf, no solo en VS Code?</summary>
+          <p>Sí. Es compatible con VS Code ≥ 1.85.0, Cursor, Windsurf, Antigravity y VS Codium, en macOS, Windows y Linux.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Envía mis estadísticas a algún servidor?</summary>
+          <p>No. Las estadísticas de uso se guardan localmente; KeyMaster no se comunica con ningún servicio externo.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ── 5. Descargas con Comandos One-Liner ───────────────────── -->
+    <section id="download">
+      <div class="container">
+        <h2 class="section-title">Instalación</h2>
+        <p class="section-desc">Un solo comando si tienes el CLI de VS Code instalado, para macOS, Windows y Linux por igual.</p>
+        <pre class="cmd"><code>code --install-extension apliarte.keymaster</code></pre>
+
+        <p class="section-desc">En Windsurf, Antigravity o Cursor (usan Open VSX, no el Marketplace de Microsoft):</p>
+        <pre class="cmd"><code># 1. Descarga el .vsix desde GitHub Releases
+# https://github.com/erbolamm/key-master/releases
+# 2. Paleta de comandos → "Extensions: Install from VSIX..."
+# 3. Selecciona el archivo descargado</code></pre>
+      </div>
+    </section>
+
+    <!-- ── 6. Apoyo Comunitario & Early Adopters ─────────────────── -->
+    <section id="support">
+      <div class="container">
+        <h2 class="section-title">Apoyo comunitario</h2>
+        <p class="section-desc">
+          Quien apoya hoy es un early adopter. Tendrá canje y descuentos futuros cuando salgan
+          planes de pago. Sin letra pequeña, de buena fe.
+        </p>
+        <div class="support-list">
+          <div class="support-item">💳 <a href="https://paypal.me/erbolamm" target="_blank" rel="noopener">PayPal — paypal.me/erbolamm</a></div>
+          <div class="support-item">☕ <a href="https://ko-fi.com/C0C11TWR1K" target="_blank" rel="noopener">Ko-fi — ko-fi.com/C0C11TWR1K</a></div>
+          <div class="support-item">🎮 <a href="https://twitch.tv/apliarte" target="_blank" rel="noopener">Twitch — twitch.tv/apliarte</a></div>
+          <div class="support-item">💸 <a href="https://streamelements.com/apliarte/tip" target="_blank" rel="noopener">Tip directo — streamelements.com/apliarte/tip</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 7. Roadmap por Fases ──────────────────────────────────── -->
+    <section id="roadmap">
+      <div class="container">
+        <h2 class="section-title">Hoja de ruta real por fases</h2>
+        <p class="section-desc">Estado verificado contra el CHANGELOG del proyecto, no una promesa de marketing.</p>
+        <div class="roadmap-list">
+          <div class="roadmap-item">
+            <span>✅</span>
+            <div><strong>0.1 a 0.2 — Detección y modos</strong><p style="color:var(--text-muted); font-size:0.9rem;">Detección de clics, 3 modos de funcionamiento y los primeros atajos.</p></div>
+          </div>
+          <div class="roadmap-item">
+            <span>✅</span>
+            <div><strong>1.0.0 — Teclado visual y estadísticas</strong><p style="color:var(--text-muted); font-size:0.9rem;">42 atajos, teclado visual QWERTY con guía por dedo, estadísticas de racha y top 5, y soporte bilingüe.</p></div>
+          </div>
+        </div>
+        <p class="section-desc" style="margin-top:16px;">No hay hoja de ruta pública más allá de esto todavía.</p>
+      </div>
+    </section>
+
+    <!-- ── 8. Planes Futuros Transparentes ───────────────────────── -->
+    <section id="pricing">
+      <div class="container">
+        <h2 class="section-title">Planes y transparencia</h2>
+        <p class="plans-note">
+          ⚠️ Sin pagos por ahora. Hoy todo es gratis. KeyMaster es una herramienta libre y no
+          tiene ningún plan comercial activo. Si en el futuro apareciera algo más, se anunciaría
+          y explicaría antes de activarse.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── 9. Nota Personal del Autor en 6 Idiomas ───────────────── -->
+    <section id="author">
+      <div class="container">
+        <h2 class="section-title" style="text-align:center;">Nota personal del autor</h2>
+        <p class="section-desc" style="text-align:center; margin:0 auto 24px;">
+          Escrita en varios idiomas para que la pueda leer gente de todo el mundo. Esto no
+          implica soporte funcional completo del producto en esos idiomas.
+        </p>
+
+        <details class="author-note" open>
+          <summary>🇪🇸 Español</summary>
+          <p>Soy desarrollador indie, autodidacta, aprendí todo desde cero a base de esfuerzo. Tengo TDAH y siempre me costó usar atajos de teclado — mi cerebro prefería el ratón porque era lo "fácil". KeyMaster nació para obligarme a mí mismo a mejorar.</p>
+          <p>Cuando vi que funcionaba, pensé: ¿por qué guardarlo solo para mí? Así que lo compartí. Si te resulta útil, agradecería una ⭐ en GitHub y 5 estrellas en el Marketplace. Y si podés, una pequeña donación ayuda — soy padre de dos niños y cada euro cuenta.</p>
+          <p>Gracias de corazón por usar KeyMaster.</p>
+        </details>
+        <details class="author-note">
+          <summary>🇬🇧 English</summary>
+          <p>I'm an indie developer, self-taught, who learned everything from scratch through effort. I have ADHD and always struggled with keyboard shortcuts — my brain preferred the mouse because it was "easy". KeyMaster was born to force myself to improve.</p>
+          <p>When I saw it worked, I thought: why keep it just for myself? So I shared it. If it helps you, I'd really appreciate a ⭐ on GitHub and 5 stars on the Marketplace. And if you can, a small donation would help enormously — I'm a father of two kids and every euro counts.</p>
+          <p>Thank you from the bottom of my heart for using KeyMaster.</p>
+        </details>
+        <details class="author-note">
+          <summary>🇧🇷 Português</summary>
+          <p>Sou um desenvolvedor indie, autodidata, que aprendeu tudo do zero com muito esforço. Tenho TDAH e sempre tive dificuldade com atalhos de teclado — meu cérebro preferia o mouse porque era o "fácil". KeyMaster nasceu para me forçar a melhorar.</p>
+          <p>Quando vi que funcionava, pensei: por que guardar só para mim? Então compartilhei. Se te for útil, agradeceria uma ⭐ no GitHub e 5 estrelas no Marketplace. E se puder, uma pequena doação ajudaria muito — sou pai de duas crianças e cada euro conta.</p>
+          <p>Obrigado de coração por usar o KeyMaster.</p>
+        </details>
+        <details class="author-note">
+          <summary>🇫🇷 Français</summary>
+          <p>Je suis développeur indie, autodidacte, j'ai tout appris par moi-même. J'ai un TDAH et j'ai toujours eu du mal avec les raccourcis clavier — mon cerveau préférait la souris parce que c'était "facile". KeyMaster est né pour me forcer à m'améliorer.</p>
+          <p>Quand j'ai vu que ça marchait, je me suis dit : pourquoi le garder pour moi seul ? Alors je l'ai partagé. Si ça t'est utile, je serais reconnaissant pour une ⭐ sur GitHub et 5 étoiles sur le Marketplace. Et si tu peux, un petit don aiderait beaucoup — je suis père de deux enfants.</p>
+          <p>Merci du fond du cœur d'utiliser KeyMaster.</p>
+        </details>
+        <details class="author-note">
+          <summary>🇩🇪 Deutsch</summary>
+          <p>Ich bin Indie-Entwickler, Autodidakt, habe alles von Grund auf gelernt. Ich habe ADHS und hatte immer Probleme mit Tastenkombinationen — mein Gehirn bevorzugte die Maus, weil es "einfacher" war. KeyMaster entstand, um mich selbst zu zwingen, besser zu werden.</p>
+          <p>Als es funktionierte, dachte ich: Warum nur für mich behalten? Also habe ich es geteilt. Wenn es dir hilft, würde ich mich über einen ⭐ auf GitHub und 5 Sterne im Marketplace freuen. Und wenn du kannst, würde eine kleine Spende sehr helfen — ich bin Vater von zwei Kindern.</p>
+          <p>Danke von Herzen, dass du KeyMaster benutzt.</p>
+        </details>
+        <details class="author-note">
+          <summary>🇮🇹 Italiano</summary>
+          <p>Sono uno sviluppatore indie, autodidatta, ho imparato tutto da zero. Ho l'ADHD e ho sempre fatto fatica con le scorciatoie da tastiera — il mio cervello preferiva il mouse perché era "facile". KeyMaster è nato per costringermi a migliorare.</p>
+          <p>Quando ho visto che funzionava, ho pensato: perché tenerlo solo per me? Così l'ho condiviso. Se ti è utile, apprezzerei una ⭐ su GitHub e 5 stelle sul Marketplace. E se puoi, una piccola donazione aiuterebbe molto — sono padre di due bambini.</p>
+          <p>Grazie di cuore per usare KeyMaster.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ── 10. Botones de Compartir & Footer ─────────────────────── -->
+    <section id="share" style="text-align:center;">
+      <div class="container">
+        <h2 class="section-title">Comparte KeyMaster</h2>
+        <div class="share-badges">
+          <a href="https://twitter.com/intent/tweet?text=Domina%20el%20teclado%2C%20olvida%20el%20rat%C3%B3n.%20Extensi%C3%B3n%20de%20entrenamiento%20de%20atajos%20para%20VS%20Code.&url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master&via=erbolamm" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/Twitter-Compartir-1DA1F2?logo=twitter&logoColor=white" alt="Compartir en Twitter" /></a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/LinkedIn-Compartir-0A66C2?logo=linkedin&logoColor=white" alt="Compartir en LinkedIn" /></a>
+          <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master&title=KeyMaster" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/Reddit-Compartir-FF4500?logo=reddit&logoColor=white" alt="Compartir en Reddit" /></a>
+          <a href="https://api.whatsapp.com/send?text=KeyMaster%20%E2%80%94%20Domina%20el%20teclado%20en%20VS%20Code%2C%20Cursor%20y%20Windsurf.%20https%3A%2F%2Fgithub.com%2Ferbolamm%2Fkey-master" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/WhatsApp-Compartir-25D366?logo=whatsapp&logoColor=white" alt="Compartir en WhatsApp" /></a>
+        </div>
+        <p><a href="https://github.com/erbolamm/key-master" target="_blank" rel="noopener">GitHub</a> · <a href="https://discord.gg/GF7FK3fmzu" target="_blank" rel="noopener">Discord</a></p>
+      </div>
+    </section>
+
+    <footer>© 2026 ApliArte · MIT License · Hecho con 🧠 desde 2023</footer>
+  </main>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      function apply(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+      apply(document.documentElement.getAttribute('data-theme') || 'light');
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        apply(next);
+        try { localStorage.setItem('apliarte_theme', next); } catch (e) { /* almacenamiento bloqueado */ }
+      });
+    })();
+  </script>
+</body>
+</html>
