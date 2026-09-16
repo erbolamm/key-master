@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src 'self' ${cspSource} data:;">
 <style>
   :root {
     --bg: #1e1e1e;
@@ -35,16 +35,101 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     font-size: 13px;
     background: var(--bg);
     color: var(--text);
-    height: 100vh;
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 30px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    scrollbar-width: thin;
   }
+  body::-webkit-scrollbar { width: 6px; }
+  body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Ecosystem Bar ── */
+  .ecosystem-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .ecosystem-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ecosystem-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .ecosystem-apps {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .app-btn {
+    position: relative;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    outline: none;
+  }
+  .app-btn:hover {
+    background: var(--row-hover);
+    border-color: var(--border);
+  }
+  .app-btn.active {
+    background: var(--row-hover);
+    border-color: var(--accent);
+  }
+  .app-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: block;
+  }
+  .app-dot {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6b7280;
+    border: 1px solid var(--surface);
+  }
+  .app-dot.installed { background: #22c55e; }
+  .app-dot.active { background: #38bdf8; box-shadow: 0 0 4px #38bdf8; }
+  .app-dot.not-installed { background: #f59e0b; }
 
   /* ── Header ── */
   .header {
@@ -110,8 +195,8 @@
 
   /* ── List ── */
   .list {
-    flex: 1;
-    overflow-y: auto;
+    flex: 1 0 auto;
+    overflow: visible;
     padding: 4px 0;
   }
   .list::-webkit-scrollbar { width: 6px; }
@@ -167,12 +252,79 @@
     font-size: 12px;
   }
 
+  /* ── Community Feedback Card ── */
+  .community-feedback-card {
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 20px 10px 40px 10px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .community-feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .community-feedback-icon { font-size: 14px; }
+  .community-feedback-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .community-feedback-desc {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+  .btn-github {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #238636;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    align-self: flex-start;
+    text-decoration: none;
+  }
+  .btn-github:hover { background: #2ea043; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
 <body>
+
+<!-- Barra de Navegación del Ecosistema ApliArte -->
+<header class="ecosystem-bar">
+  <div class="ecosystem-brand">
+    <span class="ecosystem-title">APLIARTE</span>
+  </div>
+  <div class="ecosystem-apps">
+    <button class="app-btn" id="btn-app-corrector" data-id="corrector" title="Corrector">
+      <img src="${iconCorrectorUri}" alt="Corrector" class="app-icon" />
+      <span class="app-dot" id="dot-app-corrector"></span>
+    </button>
+    <button class="app-btn" id="btn-app-ai" data-id="apliarte-ai" title="ApliArte AI">
+      <img src="${iconAiUri}" alt="ApliArte AI" class="app-icon" />
+      <span class="app-dot" id="dot-app-ai"></span>
+    </button>
+    <button class="app-btn active" id="btn-app-keymaster" data-id="keymaster" title="KeyMaster (Activo)">
+      <img src="${iconKeymasterUri}" alt="KeyMaster" class="app-icon" />
+      <span class="app-dot active"></span>
+    </button>
+  </div>
+</header>
 
 <div class="header">
   <h1>${title}</h1>
@@ -186,16 +338,95 @@
 
 <div class="list" id="list"></div>
 
+<!-- Tarjeta de Feedback y Reportes a la Comunidad en GitHub -->
+<div class="community-feedback-card">
+  <div class="community-feedback-header">
+    <span class="community-feedback-icon">💡</span>
+    <span class="community-feedback-title">¿Tienes una sugerencia o falta un atajo?</span>
+  </div>
+  <p class="community-feedback-desc">
+    Ayúdanos a mejorar KeyMaster sugiriendo nuevos atajos, funciones o reportando incidencias directamente en GitHub.
+  </p>
+  <button id="btn-feedback-github" class="btn-github" type="button">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    Enviar en GitHub
+  </button>
+</div>
+
 <script nonce="${nonce}">
 (function () {
   'use strict';
 
+  const vscode = acquireVsCodeApi();
   const shortcuts = ${shortcutsJson};
   const categories = ${categoriesJson};
   const LABELS = { tCopy: '${tCopy}', tCopied: '${tCopied}', tEmpty: '${tEmpty}' };
 
   let activeCategory = 'all';
   let searchTerm = '';
+
+  // ── Ecosystem Navigation ──
+  function updateEcosystemStatus(installed) {
+    if (!installed) return;
+    const corrStatus = document.getElementById('dot-app-corrector');
+    const corrBtn = document.getElementById('btn-app-corrector');
+    const aiStatus = document.getElementById('dot-app-ai');
+    const aiBtn = document.getElementById('btn-app-ai');
+
+    if (corrStatus && corrBtn) {
+      if (installed.corrector) {
+        corrStatus.className = 'app-dot installed';
+        corrStatus.title = 'Instalada';
+        corrBtn.title = 'Abrir Corrector (Instalada)';
+      } else {
+        corrStatus.className = 'app-dot not-installed';
+        corrStatus.title = 'No instalada';
+        corrBtn.title = 'Instalar Corrector desde Extensiones';
+      }
+    }
+
+    if (aiStatus && aiBtn) {
+      if (installed['apliarte-ai']) {
+        aiStatus.className = 'app-dot installed';
+        aiStatus.title = 'Instalada';
+        aiBtn.title = 'Abrir ApliArte AI (Instalada)';
+      } else {
+        aiStatus.className = 'app-dot not-installed';
+        aiStatus.title = 'No instalada';
+        aiBtn.title = 'Instalar ApliArte AI desde Extensiones';
+      }
+    }
+  }
+
+  document.querySelectorAll('.app-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const id = btn.getAttribute('data-id');
+      if (id && id !== 'keymaster') {
+        vscode.postMessage({ command: 'openExtension', id: id });
+      }
+    });
+  });
+
+  const feedbackBtn = document.getElementById('btn-feedback-github');
+  if (feedbackBtn) {
+    feedbackBtn.addEventListener('click', function () {
+      vscode.postMessage({
+        command: 'openExternal',
+        url: 'https://github.com/erbolamm/key-master/issues/new?title=%5BFeedback%5D+Sugerencia+o+incidencia&body=%23%23+Descripci%C3%B3n%0A%0A%23%23+Atajo+o+funci%C3%B3n+solicitada%0A'
+      });
+    });
+  }
+
+  window.addEventListener('message', function (event) {
+    const msg = event.data;
+    if (msg && msg.type === 'ecosystemStatus' && msg.installed) {
+      updateEcosystemStatus(msg.installed);
+    }
+  });
+
+  vscode.postMessage({ command: 'requestEcosystemStatus' });
 
   // ── Render tabs ──
   function renderTabs() {
@@ -267,7 +498,6 @@
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(text);
     } else {
-      // Fallback for older environments
       var ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
@@ -277,8 +507,6 @@
       document.execCommand('copy');
       document.body.removeChild(ta);
     }
-    // Notify VS Code
-    var vscode = acquireVsCodeApi();
     if (vscode) vscode.postMessage({ command: 'copy', data: text });
   }
 

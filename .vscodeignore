@@ -6,6 +6,7 @@ test/
 !dist/extension.js
 !media/**
 !src/ui/keyboardPanel/keyboard.html
+!src/ui/shortcutsPanel/shortcuts.html
 .gitignore
 .vscode/
 tsconfig.json

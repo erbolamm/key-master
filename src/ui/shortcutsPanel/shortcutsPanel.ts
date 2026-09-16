@@ -31,33 +31,106 @@ class ShortcutsTreeProvider implements vscode.WebviewViewProvider {
   constructor(private readonly _context: vscode.ExtensionContext) {}
 
   resolveWebviewView(view: vscode.WebviewView): void {
+    const extPath = this._context.extensionPath;
     view.webview.options = {
       localResourceRoots: [
-        vscode.Uri.file(
-          path.join(this._context.extensionPath, 'src', 'ui', 'shortcutsPanel'),
-        ),
+        vscode.Uri.file(path.join(extPath, 'src', 'ui', 'shortcutsPanel')),
+        vscode.Uri.file(path.join(extPath, 'media')),
       ],
       enableScripts: true,
     };
-    view.webview.html = this._buildHtml();
-    view.webview.onDidReceiveMessage(this._handleMessage.bind(this));
+
+    const iconCorrectorUri = view.webview.asWebviewUri(
+      vscode.Uri.file(path.join(extPath, 'media', 'icons', 'corrector.png'))
+    );
+    const iconAiUri = view.webview.asWebviewUri(
+      vscode.Uri.file(path.join(extPath, 'media', 'icons', 'apliarte-ai.png'))
+    );
+    const iconKeymasterUri = view.webview.asWebviewUri(
+      vscode.Uri.file(path.join(extPath, 'media', 'icons', 'keymaster.png'))
+    );
+
+    view.webview.html = this._buildHtml(
+      view.webview.cspSource,
+      iconCorrectorUri.toString(),
+      iconAiUri.toString(),
+      iconKeymasterUri.toString()
+    );
+    view.webview.onDidReceiveMessage((msg) => this._handleMessage(msg, view));
+
+    // Send ecosystem status initially
+    this._sendEcosystemStatus(view);
   }
 
-  private _handleMessage(msg: {
-    command: string;
-    data?: unknown;
-  }): void {
+  private _handleMessage(
+    msg: {
+      command: string;
+      data?: unknown;
+      id?: string;
+      url?: string;
+    },
+    view: vscode.WebviewView
+  ): void {
     if (msg.command === 'copy') {
       const text = String(msg.data ?? '');
       vscode.env.clipboard.writeText(text);
+    } else if (msg.command === 'openExtension') {
+      const ext = msg.id;
+      if (ext === 'corrector') {
+        const hasCorr = Boolean(vscode.extensions?.getExtension?.('apliarte.corrector-espanol'));
+        if (hasCorr) {
+          try {
+            vscode.commands.executeCommand('corrector.iaLocalView.focus');
+          } catch {
+            vscode.commands.executeCommand('workbench.view.extension.apliarteCorrector');
+          }
+        } else {
+          vscode.commands.executeCommand('workbench.extensions.search', 'apliarte.corrector-espanol');
+        }
+      } else if (ext === 'apliarte-ai') {
+        const hasAi = Boolean(vscode.extensions?.getExtension?.('apliarte.apliarte-ai'));
+        if (hasAi) {
+          try {
+            vscode.commands.executeCommand('apliarteAi.chatView.focus');
+          } catch {
+            vscode.commands.executeCommand('workbench.view.extension.apliarteAi');
+          }
+        } else {
+          vscode.commands.executeCommand('workbench.extensions.search', 'apliarte.apliarte-ai');
+        }
+      }
+    } else if (msg.command === 'openExternal') {
+      if (msg.url) {
+        vscode.env.openExternal(vscode.Uri.parse(msg.url));
+      }
+    } else if (msg.command === 'requestEcosystemStatus') {
+      this._sendEcosystemStatus(view);
     }
+  }
+
+  private _sendEcosystemStatus(view: vscode.WebviewView): void {
+    const hasCorr = Boolean(vscode.extensions?.getExtension?.('apliarte.corrector-espanol'));
+    const hasAi = Boolean(vscode.extensions?.getExtension?.('apliarte.apliarte-ai'));
+    view.webview.postMessage({
+      type: 'ecosystemStatus',
+      installed: {
+        corrector: hasCorr,
+        'apliarte-ai': hasAi,
+        keymaster: true,
+      },
+    });
   }
 
   private _nonce(): string {
     return crypto.randomBytes(16).toString('base64');
   }
 
-  private _buildHtml(): string {
+  private _buildHtml(
+    cspSource: string,
+    iconCorrectorUri: string,
+    iconAiUri: string,
+    iconKeymasterUri: string
+  ): string {
     const cfg = getConfig();
     const isES = cfg.language === 'es';
     const nonce = this._nonce();
@@ -71,6 +144,10 @@ class ShortcutsTreeProvider implements vscode.WebviewViewProvider {
 
     html = html
       .replace(/\$\{nonce\}/g, nonce)
+      .replace(/\$\{cspSource\}/g, cspSource)
+      .replace(/\$\{iconCorrectorUri\}/g, iconCorrectorUri)
+      .replace(/\$\{iconAiUri\}/g, iconAiUri)
+      .replace(/\$\{iconKeymasterUri\}/g, iconKeymasterUri)
       .replace(/\$\{lang\}/g, isES ? 'es' : 'en')
       .replace(/\$\{title\}/g, isES ? 'Referencia de Atajos' : 'Shortcut Reference')
       .replace(/\${shortcutsJson}/g, JSON.stringify(rows))
