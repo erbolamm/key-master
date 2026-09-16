@@ -80,9 +80,17 @@ class ShortcutsTreeProvider implements vscode.WebviewViewProvider {
         const hasCorr = Boolean(vscode.extensions?.getExtension?.('apliarte.corrector-espanol'));
         if (hasCorr) {
           try {
-            vscode.commands.executeCommand('corrector.iaLocalView.focus');
+            vscode.commands.executeCommand('corrector.iaLocalPanel.focus');
           } catch {
-            vscode.commands.executeCommand('workbench.view.extension.apliarteCorrector');
+            try {
+              vscode.commands.executeCommand('corrector.abrirIALocal');
+            } catch {
+              try {
+                vscode.commands.executeCommand('workbench.view.extension.corrector');
+              } catch {
+                // Fallback silencioso
+              }
+            }
           }
         } else {
           vscode.commands.executeCommand('workbench.extensions.search', 'apliarte.corrector-espanol');
