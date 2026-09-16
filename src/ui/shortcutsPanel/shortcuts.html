@@ -131,12 +131,218 @@
   .app-dot.active { background: #38bdf8; box-shadow: 0 0 4px #38bdf8; }
   .app-dot.not-installed { background: #f59e0b; }
 
+  /* ── Control & Config Card ── */
+  .control-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 10px 6px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .control-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .control-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .control-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .status-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: #ef444433;
+    color: #ef4444;
+    border: 1px solid #ef444466;
+  }
+  .status-badge.active {
+    background: #22c55e33;
+    color: #22c55e;
+    border-color: #22c55e66;
+  }
+  .control-actions-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .icon-action-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 5px;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .icon-action-btn:hover {
+    background: var(--row-hover);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  /* Switch Toggle */
+  .btn-toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: #4b5563;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s ease;
+    padding: 0;
+  }
+  .btn-toggle.active {
+    background: #22c55e;
+    border-color: #22c55e;
+  }
+  .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+  .btn-toggle.active .toggle-slider {
+    transform: translateX(16px);
+  }
+
+  /* Mode selector */
+  .mode-selector-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .control-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .mode-buttons {
+    display: flex;
+    gap: 4px;
+  }
+  .mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+  }
+  .mode-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .mode-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .mode-desc {
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--text-muted);
+  }
+
+  /* Quick options row */
+  .quick-options-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
+  .sound-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+  }
+  .sound-toggle-label input {
+    cursor: pointer;
+  }
+  .btn-quick {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-quick:hover {
+    background: var(--row-hover);
+    border-color: var(--accent);
+  }
+
+  /* Stats summary */
+  .stats-summary {
+    display: flex;
+    gap: 6px;
+  }
+  .stat-pill {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+  .stat-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .stat-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
   /* ── Header ── */
   .header {
     padding: 8px 10px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     flex-shrink: 0;
+    margin-top: 4px;
   }
   .header h1 {
     font-size: 13px;
@@ -326,6 +532,73 @@
   </div>
 </header>
 
+<!-- Panel de Control y Configuración de KeyMaster -->
+<section class="control-card" id="control-card">
+  <div class="control-header-row">
+    <div class="control-title-wrap">
+      <span class="control-title">⌨️ KeyMaster</span>
+      <span id="badge-status" class="status-badge active">Activo</span>
+    </div>
+    <div class="control-actions-top">
+      <button id="btn-toggle-enabled" class="btn-toggle active" title="Activar/Desactivar KeyMaster">
+        <span class="toggle-slider"></span>
+      </button>
+      <button id="btn-open-settings" class="icon-action-btn" title="Abrir ajustes avanzados de KeyMaster">
+        ⚙️
+      </button>
+    </div>
+  </div>
+
+  <!-- Selector de Modo -->
+  <div class="mode-selector-wrap">
+    <label class="control-label">Modo de entrenamiento:</label>
+    <div class="mode-buttons">
+      <button class="mode-btn active" data-mode="soft" title="Aviso suave al usar el ratón">
+        <span>🟢</span> Suave
+      </button>
+      <button class="mode-btn" data-mode="strict" title="Bloquea la acción y te obliga a usar el atajo">
+        <span>🟡</span> Estricto
+      </button>
+      <button class="mode-btn" data-mode="training" title="Abre el teclado visual interactivo">
+        <span>🔵</span> Entreno
+      </button>
+    </div>
+    <p class="mode-desc" id="mode-desc">
+      Aviso suave: detecta clic y muestra el atajo correspondiente, pero permite la acción.
+    </p>
+  </div>
+
+  <!-- Fila de Opciones Rápidas: Sonido + Teclado Visual + Estadísticas -->
+  <div class="quick-options-row">
+    <label class="sound-toggle-label" title="Reproducir sonido al detectar uso del ratón">
+      <input type="checkbox" id="check-sound" />
+      <span>🔊 Sonido</span>
+    </label>
+    <button id="btn-open-keyboard" class="btn-quick" type="button" title="Abrir teclado interactivo en el editor">
+      ⌨️ Teclado Visual
+    </button>
+    <button id="btn-show-stats" class="btn-quick" type="button" title="Ver resumen de estadísticas de la sesión">
+      📊 Estadísticas
+    </button>
+  </div>
+
+  <!-- Mini resumen de estadísticas -->
+  <div class="stats-summary" id="stats-summary">
+    <div class="stat-pill" title="Clics de ratón interceptados hoy">
+      <span class="stat-label">Clics hoy</span>
+      <span class="stat-value" id="stat-clicks-today">0</span>
+    </div>
+    <div class="stat-pill" title="Total de clics interceptados acumulados">
+      <span class="stat-label">Total</span>
+      <span class="stat-value" id="stat-clicks-total">0</span>
+    </div>
+    <div class="stat-pill" title="Días consecutivos entrenando con teclado">
+      <span class="stat-label">Racha</span>
+      <span class="stat-value" id="stat-streak">🔥 0 d</span>
+    </div>
+  </div>
+</section>
+
 <div class="header">
   <h1>${title}</h1>
   <div class="search-box">
@@ -364,8 +637,116 @@
   const categories = ${categoriesJson};
   const LABELS = { tCopy: '${tCopy}', tCopied: '${tCopied}', tEmpty: '${tEmpty}' };
 
+  const MODE_DESCRIPTIONS = {
+    soft: 'Aviso suave: detecta uso de ratón y muestra el atajo correspondiente, pero permite la acción.',
+    strict: 'Aviso estricto: bloquea la acción con ratón y te obliga a usar el teclado.',
+    training: 'Modo entrenamiento: abre el teclado visual interactivo para memorizar el atajo.'
+  };
+
   let activeCategory = 'all';
   let searchTerm = '';
+  let currentConfig = { enabled: true, mode: 'soft', soundEnabled: false };
+
+  // ── Configuration UI & Events ──
+  function updateConfigUI(config, stats) {
+    if (config) {
+      currentConfig = config;
+      // Status badge & toggle
+      const badge = document.getElementById('badge-status');
+      const toggle = document.getElementById('btn-toggle-enabled');
+      if (badge && toggle) {
+        if (config.enabled) {
+          badge.textContent = 'Activo';
+          badge.className = 'status-badge active';
+          toggle.className = 'btn-toggle active';
+        } else {
+          badge.textContent = 'Inactivo';
+          badge.className = 'status-badge';
+          toggle.className = 'btn-toggle';
+        }
+      }
+
+      // Mode buttons
+      document.querySelectorAll('.mode-btn').forEach(function (btn) {
+        if (btn.dataset.mode === config.mode) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Mode description
+      const descEl = document.getElementById('mode-desc');
+      if (descEl && MODE_DESCRIPTIONS[config.mode]) {
+        descEl.textContent = MODE_DESCRIPTIONS[config.mode];
+      }
+
+      // Sound checkbox
+      const soundCheck = document.getElementById('check-sound');
+      if (soundCheck) {
+        soundCheck.checked = Boolean(config.soundEnabled);
+      }
+    }
+
+    if (stats) {
+      const elClicksToday = document.getElementById('stat-clicks-today');
+      const elClicksTotal = document.getElementById('stat-clicks-total');
+      const elStreak = document.getElementById('stat-streak');
+      if (elClicksToday) elClicksToday.textContent = String(stats.mouseClicksToday ?? 0);
+      if (elClicksTotal) elClicksTotal.textContent = String(stats.mouseClicksTotal ?? 0);
+      if (elStreak) elStreak.textContent = '🔥 ' + (stats.streak ?? 0) + ' d';
+    }
+  }
+
+  // Toggle enabled button
+  const btnToggle = document.getElementById('btn-toggle-enabled');
+  if (btnToggle) {
+    btnToggle.addEventListener('click', function () {
+      const next = !currentConfig.enabled;
+      vscode.postMessage({ command: 'setConfig', data: { key: 'enabled', value: next } });
+    });
+  }
+
+  // Settings gear button
+  const btnSettings = document.getElementById('btn-open-settings');
+  if (btnSettings) {
+    btnSettings.addEventListener('click', function () {
+      vscode.postMessage({ command: 'openSettings' });
+    });
+  }
+
+  // Mode buttons
+  document.querySelectorAll('.mode-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const mode = btn.dataset.mode;
+      if (mode) {
+        vscode.postMessage({ command: 'setConfig', data: { key: 'mode', value: mode } });
+      }
+    });
+  });
+
+  // Sound checkbox
+  const checkSound = document.getElementById('check-sound');
+  if (checkSound) {
+    checkSound.addEventListener('change', function () {
+      vscode.postMessage({ command: 'setConfig', data: { key: 'soundEnabled', value: this.checked } });
+    });
+  }
+
+  // Quick action buttons
+  const btnKb = document.getElementById('btn-open-keyboard');
+  if (btnKb) {
+    btnKb.addEventListener('click', function () {
+      vscode.postMessage({ command: 'openKeyboard' });
+    });
+  }
+
+  const btnStats = document.getElementById('btn-show-stats');
+  if (btnStats) {
+    btnStats.addEventListener('click', function () {
+      vscode.postMessage({ command: 'showStats' });
+    });
+  }
 
   // ── Ecosystem Navigation ──
   function updateEcosystemStatus(installed) {
@@ -421,12 +802,17 @@
 
   window.addEventListener('message', function (event) {
     const msg = event.data;
-    if (msg && msg.type === 'ecosystemStatus' && msg.installed) {
-      updateEcosystemStatus(msg.installed);
+    if (msg) {
+      if (msg.type === 'ecosystemStatus' && msg.installed) {
+        updateEcosystemStatus(msg.installed);
+      } else if (msg.type === 'configStatus') {
+        updateConfigUI(msg.config, msg.stats);
+      }
     }
   });
 
   vscode.postMessage({ command: 'requestEcosystemStatus' });
+  vscode.postMessage({ command: 'requestConfig' });
 
   // ── Render tabs ──
   function renderTabs() {

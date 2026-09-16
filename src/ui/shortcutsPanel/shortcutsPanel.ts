@@ -4,7 +4,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as process from 'process';
 import { shortcuts, ShortcutEntry, ShortcutCategory } from '../../data/shortcuts';
-import { getConfig } from '../../utils/config';
+import { getConfig, setConfigValue, onConfigChanged, KeyMasterConfig } from '../../utils/config';
+import { getStats } from '../../core/sessionStats';
 import { logger } from '../../utils/logger';
 
 export const SHORTCUTS_VIEW_TYPE = 'keymasterShortcuts';
@@ -58,8 +59,17 @@ class ShortcutsTreeProvider implements vscode.WebviewViewProvider {
     );
     view.webview.onDidReceiveMessage((msg) => this._handleMessage(msg, view));
 
-    // Send ecosystem status initially
+    // Send ecosystem and configuration status initially
     this._sendEcosystemStatus(view);
+    this._sendConfigStatus(view);
+
+    // Listen to real-time configuration changes
+    const configSub = onConfigChanged((cfg) => {
+      this._sendConfigStatus(view, cfg);
+    });
+    view.onDidDispose(() => {
+      configSub.dispose();
+    });
   }
 
   private _handleMessage(
@@ -113,7 +123,33 @@ class ShortcutsTreeProvider implements vscode.WebviewViewProvider {
       }
     } else if (msg.command === 'requestEcosystemStatus') {
       this._sendEcosystemStatus(view);
+    } else if (msg.command === 'setConfig') {
+      const payload = msg.data as { key: keyof KeyMasterConfig; value: unknown };
+      if (payload && payload.key) {
+        void setConfigValue(payload.key, payload.value as any);
+      }
+    } else if (msg.command === 'openKeyboard') {
+      void vscode.commands.executeCommand('keymaster.openKeyboard');
+    } else if (msg.command === 'showStats') {
+      void vscode.commands.executeCommand('keymaster.showStats');
+    } else if (msg.command === 'openSettings') {
+      void vscode.commands.executeCommand('workbench.action.openSettings', '@ext:apliarte.keymaster');
+    } else if (msg.command === 'requestConfig') {
+      this._sendConfigStatus(view);
     }
+  }
+
+  private _sendConfigStatus(view: vscode.WebviewView, cfg = getConfig()): void {
+    const stats = getStats();
+    view.webview.postMessage({
+      type: 'configStatus',
+      config: cfg,
+      stats: {
+        mouseClicksToday: stats.mouseClicksToday,
+        mouseClicksTotal: stats.mouseClicksTotal,
+        streak: stats.streak,
+      },
+    });
   }
 
   private _sendEcosystemStatus(view: vscode.WebviewView): void {
