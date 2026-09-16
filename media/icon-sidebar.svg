@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Keycap body -->
+  <rect x="2.5" y="2.5" width="19" height="19" rx="3.5" stroke-width="1.5" />
+  
+  <!-- Keycap top surface inner outline -->
+  <rect x="5.5" y="4.5" width="13" height="13" rx="2" stroke-width="1" stroke-dasharray="none" opacity="0.35" />
+  
+  <!-- Lightning bolt (rayo) centered -->
+  <polygon points="13 6.5 8.5 12 11.5 12 10.5 17.5 15.5 11.5 12.5 11.5 13 6.5" fill="currentColor" stroke-width="1" />
+</svg>

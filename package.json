@@ -2,7 +2,7 @@
   "name": "keymaster",
   "displayName": "KeyMaster",
   "description": "Entrenamiento de atajos de teclado para VS Code, Cursor y Windsurf",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "apliarte",
   "author": {
     "name": "Javier Mateo (ApliArte)"
@@ -153,7 +153,7 @@
             {
               "id": "keymasterShortcuts",
               "title": "KeyMaster",
-              "icon": "icon.png"
+              "icon": "media/icon-sidebar.svg"
             }
           ]
         },
