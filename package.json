@@ -136,37 +136,37 @@
         "title": "KeyMaster: Abrir panel de atajos"
       }
     ],
-        "keybindings": [
-          {
-            "command": "keymaster.toggle",
-            "key": "ctrl+shift+k",
-            "mac": "cmd+shift+k"
-          },
-          {
-            "command": "keymaster.openKeyboard",
-            "key": "ctrl+shift+j",
-            "mac": "cmd+shift+j"
-          }
-        ],
-        "viewsContainers": {
-          "activitybar": [
-            {
-              "id": "keymasterShortcuts",
-              "title": "KeyMaster",
-              "icon": "media/icon-sidebar.svg"
-            }
-          ]
-        },
-        "views": {
-          "keymasterShortcuts": [
-            {
-              "type": "webview",
-              "id": "keymasterShortcuts",
-              "name": "KeyMaster"
-            }
-          ]
-        }
+    "keybindings": [
+      {
+        "command": "keymaster.toggle",
+        "key": "ctrl+shift+k",
+        "mac": "cmd+shift+k"
       },
+      {
+        "command": "keymaster.openKeyboard",
+        "key": "ctrl+shift+j",
+        "mac": "cmd+shift+j"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "keymasterShortcuts",
+          "title": "KeyMaster",
+          "icon": "media/icon-sidebar.svg"
+        }
+      ]
+    },
+    "views": {
+      "keymasterShortcuts": [
+        {
+          "type": "webview",
+          "id": "keymasterShortcuts",
+          "name": "KeyMaster"
+        }
+      ]
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && node esbuild.js",
@@ -176,8 +176,7 @@
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "package": "npm run check-types && node esbuild.js --production",
     "lint": "eslint src",
-    "test": "node ./out/test/runTest.js",
-    "pretest": "tsc -p tsconfig.test.json"
+    "test": "tsc -p tsconfig.test.json && node --test \"out-test/test/**/*.js\""
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",

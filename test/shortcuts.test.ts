@@ -1,4 +1,5 @@
-import * as assert from 'assert';
+import { suite, test } from 'node:test';
+import * as assert from 'node:assert/strict';
 import {
   shortcuts,
   findShortcutByCommand,
@@ -6,7 +7,7 @@ import {
   getRandomShortcut,
   getShortcutForPlatform,
   getDescription,
-} from '../../src/data/shortcuts';
+} from '../src/data/shortcuts';
 
 suite('Shortcuts Database', () => {
   test('debe contener al menos 20 atajos', () => {
@@ -52,7 +53,6 @@ suite('Shortcuts Database', () => {
   test('getShortcutForPlatform devuelve el atajo según plataforma', () => {
     const entry = findShortcutByCommand('workbench.action.quickOpen')!;
     const shortcut = getShortcutForPlatform(entry);
-    // En el entorno de test, depende de la plataforma real
     assert.ok(
       shortcut === 'Ctrl+P' || shortcut === 'Cmd+P',
       `Atajo inesperado: ${shortcut}`,

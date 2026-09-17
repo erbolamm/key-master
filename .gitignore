@@ -5,3 +5,4 @@ dist/
 *.vsix
 blogger-post.html
 .atl/
+out-test/
